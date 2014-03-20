@@ -81,7 +81,7 @@ qSlicerSessionDataRecorderModule::~qSlicerSessionDataRecorderModule()
 //-----------------------------------------------------------------------------
 QString qSlicerSessionDataRecorderModule::helpText()const
 {
-  return "The purpose of the Session Data Recorder module is to record and save tool trajectories associated with needle-based interventions. For help on how to use this module visit: <a href='http://www.perktutor.org/'>PerkTutor</a>.";
+  return "The purpose of the Session Data Recorder module is to authenticate users and associate a Slicer session with a user.";
 }
 
 //-----------------------------------------------------------------------------
