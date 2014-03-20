@@ -120,6 +120,7 @@ void qSlicerSessionDataRecorderModuleWidget::setup()
   connect(d->pushButtonCreate, SIGNAL( clicked() ), this, SLOT( onCreateButtonClicked() ) ); 
   connect(d->pushButtonLogin, SIGNAL( clicked() ), this, SLOT( onLoginButtonClicked() ) ); 
   connect(d->OkButton, SIGNAL( clicked() ), this, SLOT(onOKButtonClicked()));
+  connect(d->saveSceneButton, SIGNAL(clicked()), this, SLOT( onSaveSceneButtonClicked()) );
   
   d->groupBox->hide();
 }
@@ -338,13 +339,6 @@ void qSlicerSessionDataRecorderModuleWidget
 	}
 	else cout << "Unable to open myfile";
 	
-	//write to sqlite database
-	//sqlite3.create("users.db");
-	
-	//init
-	//QString databaseFilename = "TraineeDatabase";
-	//Q_Q(TraineeDatabase);
-	//q->openDatabase(databaseFilename);
 }
 
 
@@ -353,4 +347,8 @@ void qSlicerSessionDataRecorderModuleWidget
 {
 	Q_D( qSlicerSessionDataRecorderModuleWidget );
 	QMessageBox::information(0, "Saving", "Saving Scene to Default Location");
+
+	//where should the scene be saved?
+
+
 }
