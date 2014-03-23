@@ -43,6 +43,9 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
+//include Slicer code
+#include <qSlicerSaveDataDialog.h>
+
 
 //-----------------------------------------------------------------------------
 /// \ingroup Slicer_QtModules_SessionDataRecorder
@@ -219,7 +222,26 @@ void qSlicerSessionDataRecorderModuleWidget
 		QStringList tables = database.tables(QSql::Tables);
 		if(!tables.contains("users"))
 		{
-			QMessageBox::information(0, "Error", "database is still empty :(");	
+			if((d->lineEditUsername->text() == "admin") && ( d->lineEditPassword->text() == "default"))
+			{
+				//create users table and add admin user
+				QSqlQuery query;
+				query.exec("CREATE table users(username varchar(30) primary key, password varchar(30));");
+
+				query.prepare("INSERT INTO users (username, password) " "VALUES (:username, :password)");
+				query.bindValue(":username", "admin");
+				query.bindValue(":password", "default");
+				query.exec();
+
+				QMessageBox::information(0, "Login successful", "You are now logged in as admin");
+				d->groupBoxAuthentication->hide();
+				d->groupBox->show();
+			}
+			else
+			{
+				QMessageBox::information(0, "Error", "User does not exist or the password is incorrect. Log in as admin to create new user account.");
+			}
+				
 		}
 		else
 		{
@@ -238,7 +260,8 @@ void qSlicerSessionDataRecorderModuleWidget
 					d->groupBoxAuthentication->hide();
 					d->groupBox->show();
 				}
-				else{
+				else
+				{
 					QMessageBox::information(0, "Login failed", "Either the username or password is incorrect.");
 					d->lineEditUsername->setText("");
 					d->lineEditPassword->setText("");
@@ -319,8 +342,9 @@ void qSlicerSessionDataRecorderModuleWidget
 	database.close();
 	
 	QDir directory = "/";
+
 	//select a directory using file dialog 
-    QString path = QFileDialog::getExistingDirectory (this, tr("Directory"), directory.path());
+    //QString path = QFileDialog::getExistingDirectory (this, tr("Directory"), directory.path());
    
 	/*if ( path.isNull() == false )
     {
@@ -329,7 +353,7 @@ void qSlicerSessionDataRecorderModuleWidget
     }
 	*/
 
-	//write to the given directory
+	/*write to the given directory
 	ofstream myfile (path.toStdString().append("/example.txt").c_str());
 	if (myfile.is_open())
 	{
@@ -338,9 +362,8 @@ void qSlicerSessionDataRecorderModuleWidget
 		myfile.close();
 	}
 	else cout << "Unable to open myfile";
-	
+	*/
 }
-
 
 void qSlicerSessionDataRecorderModuleWidget
 ::onSaveSceneButtonClicked()
@@ -349,6 +372,30 @@ void qSlicerSessionDataRecorderModuleWidget
 	QMessageBox::information(0, "Saving", "Saving Scene to Default Location");
 
 	//where should the scene be saved?
+	//probably the same parent folder in which the database is saved, for simplicity'sake and consistency. Check with Tamas.
+	//currently the default storage place for the database is C:/Slicer-Superbuild-Debug/Slicer-build
 
+	//copied from: qSlicerSaveDataDialogPrivate::save() method
+	qSlicerIO::IOProperties properties;
+	
+	/*
+	QFileInfo file = this->sceneFile();
+	properties["fileName"] = file.absoluteFilePath();
+
+	// create a screenShot of the full layout
+	QWidget* widget = qSlicerApplication::application()->layoutManager()->viewport();
+	this->hide();  // don't block the screenshot
+	QImage screenShot = ctk::grabVTKWidget(widget);
+	this->show();
+	properties["screenShot"] = screenShot;
+
+	qSlicerIOOptions* options = this->options(this->findSceneRow());
+	if (options)
+    {
+		//properties.unite(options->properties());
+    }
+	 bool res = qSlicerApplication::application()->coreIOManager()->saveNodes(QString("SceneFile"), properties);
+	//Q_D(qSlicerSaveDataDialog); //doesn't work ( does not assign d to the dialog..)
+*/
 
 }
