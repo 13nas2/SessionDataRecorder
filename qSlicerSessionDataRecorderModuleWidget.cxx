@@ -173,7 +173,11 @@ void qSlicerSessionDataRecorderModuleWidget
 
 			if(checkUserQuery.next()) //found the user  /*//MAYBE: ask the user to enter the password again to login?...*/
 			{
-				QMessageBox::information(0, "Cannot create user", "This user already exists. Please use login button instead");
+				QMessageBox::information(0, "Cannot create user", "Cannot create new user: This user already exists");
+				d->lineEditUsername->setText("");
+				d->lineEditPassword->setText("");
+				d->lineEditUsername->setFocus();
+				
 			}
 			else
 			{
@@ -234,7 +238,12 @@ void qSlicerSessionDataRecorderModuleWidget
 				query.exec();
 
 				QMessageBox::information(0, "Login successful", "You are now logged in as admin");
-				d->groupBoxAuthentication->hide();
+				d->groupBoxAuthentication->setTitle("Admininstration: Create New User Accounts");
+				d->pushButtonLogin->hide();
+				d->pushButtonCreate->setEnabled(true);
+				d->pushButtonCreate->setAutoDefault(true);
+				d->lineEditPassword->setText("");
+				d->lineEditUsername->setText("");
 				d->groupBox->show();
 			}
 			else
@@ -256,8 +265,22 @@ void qSlicerSessionDataRecorderModuleWidget
 
 				if(checkUserQuery.next())//found username/password pair.
 				{
-					QMessageBox::information(0, "Login successful", "You are now logged in.");
-					d->groupBoxAuthentication->hide();
+					if(d->lineEditUsername->text() == "admin")
+					{
+						QMessageBox::information(0, "Login successful", "You are now logged in as admin");
+						d->groupBoxAuthentication->setTitle("Admininstration: Create New User Accounts");
+						d->pushButtonLogin->hide();
+						d->pushButtonCreate->setEnabled(true);
+						d->pushButtonCreate->setShortcut(Qt::Key_Return);
+						d->lineEditPassword->setText("");
+						d->lineEditUsername->setText("");
+						d->lineEditUsername->setFocus();
+					}
+					else
+					{
+						QMessageBox::information(0, "Login successful", "You are now logged in.");
+						d->groupBoxAuthentication->hide();
+					}
 					d->groupBox->show();
 				}
 				else
@@ -280,7 +303,6 @@ void qSlicerSessionDataRecorderModuleWidget
 {
 	Q_D( qSlicerSessionDataRecorderModuleWidget );
 	d->groupBox->show();
-
 }
 
 void qSlicerSessionDataRecorderModuleWidget
@@ -289,7 +311,7 @@ void qSlicerSessionDataRecorderModuleWidget
 	Q_D( qSlicerSessionDataRecorderModuleWidget );
 
 	//mrml scene's root directory is C:/Users/Nisrin/Desktop
-	//lwhen user clicks SAVE the mrml scene is automatically saved to a given location.
+	//when user clicks SAVE the mrml scene is automatically saved to a given location.
 
 	//save the studentID in the database, 
 	//retrieve database
@@ -322,7 +344,6 @@ void qSlicerSessionDataRecorderModuleWidget
 				QMessageBox::information(0, "Student Exists", "Don't need to enter any information, this student exists in the database");
 			}
 			else{
-
 				//ask user for student's name and other information. *** TO DO***
 				QSqlQuery query;
 				query.prepare("INSERT INTO students(id, firstname) " "VALUES (:id, :firstname)");
@@ -346,14 +367,13 @@ void qSlicerSessionDataRecorderModuleWidget
 	//select a directory using file dialog 
     //QString path = QFileDialog::getExistingDirectory (this, tr("Directory"), directory.path());
    
-	/*if ( path.isNull() == false )
+	/*
+	if ( path.isNull() == false )
     {
         d->MessageLabel->setText(path);
 		this->updateWidget();
     }
-	*/
-
-	/*write to the given directory
+	//write to the given directory
 	ofstream myfile (path.toStdString().append("/example.txt").c_str());
 	if (myfile.is_open())
 	{
