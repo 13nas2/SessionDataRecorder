@@ -43,7 +43,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 
-//include Slicer code
+//include Slicer code 
 #include <qSlicerSaveDataDialog.h>
 
 
@@ -148,7 +148,7 @@ void qSlicerSessionDataRecorderModuleWidget
 
 	//retrieve database
 	QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
-	database.setDatabaseName("trainees.db");
+	database.setDatabaseName("PerkTutorSessions.db");
 	if(database.open())
 	{
 		//if database opens successfully, check whether there is a users table.
@@ -218,7 +218,7 @@ void qSlicerSessionDataRecorderModuleWidget
 
 	//retrieve database
 	QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
-	database.setDatabaseName("trainees.db");
+	database.setDatabaseName("PerkTutorSessions.db");
 	if(database.open())
 	{
 		//if database opens successfully, check whether there is a users table.
@@ -316,7 +316,7 @@ void qSlicerSessionDataRecorderModuleWidget
 	//save the studentID in the database, 
 	//retrieve database
 	QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
-	database.setDatabaseName("trainees.db");
+	database.setDatabaseName("PerkTutorSessions.db");
 	if(database.open())
 	{
 		//if database opens successfully, check whether there is a students/trainee table.
@@ -389,22 +389,48 @@ void qSlicerSessionDataRecorderModuleWidget
 ::onSaveSceneButtonClicked()
 {
 	Q_D( qSlicerSessionDataRecorderModuleWidget );
-	QMessageBox::information(0, "Saving", "Saving Scene to Default Location");
+	//QMessageBox::information(0, "Saving", "Saving Scene to Default Location");
 
-	//where should the scene be saved?
-	//probably the same parent folder in which the database is saved, for simplicity'sake and consistency. Check with Tamas.
+	//create training session "sessions" table with fields "user_id", "datetime", "directory", "filename"
+
+	//retrieve database
+	QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
+	database.setDatabaseName("PerkTutorSessions.db");
+	if(database.open())
+	{
+		QStringList tables = database.tables(QSql::Tables);
+		if(!tables.contains("sessions"))
+		{
+			QSqlQuery query;
+			query.exec("CREATE table sessions(sessionID integer primary key autoincrement, userID varchar[20], timestamp datetime default current_timestamp, filepath varchar(64));");
+			
+			QMessageBox::information(0, "Created new 'sessions' table ","Created new 'sessiond' table ");
+		}
+
+		//add data to table
+		QSqlQuery query;
+		query.prepare("INSERT INTO sessions(userID, filepath) " "VALUES (:userID, :filepath)");
+		query.bindValue(":userID", d->lineEditStudentID->text());
+		//query.bindValue(":filepath", d->lineEditPassword->text());
+		query.exec();
+
+		//QMessageBox::information(0, "Inserted Data", "");
+	
+	}
+
+
+	//save scene in the same parent folder as the database for simplicity' sake and consistency. Check with Tamas.
 	//currently the default storage place for the database is C:/Slicer-Superbuild-Debug/Slicer-build
 
-	//copied from: qSlicerSaveDataDialogPrivate::save() method
-	qSlicerIO::IOProperties properties;
+	qSlicerApplication::application()->ioManager()->openSaveDataDialog();
 	
-	/*
+	
+	/*  	//copied from: qSlicerSaveDataDialogPrivate::save() method 
 	QFileInfo file = this->sceneFile();
-	properties["fileName"] = file.absoluteFilePath();
+	qSlicerIO::IOProperties properties["fileName"] = file.absoluteFilePath();
 
 	// create a screenShot of the full layout
 	QWidget* widget = qSlicerApplication::application()->layoutManager()->viewport();
-	this->hide();  // don't block the screenshot
 	QImage screenShot = ctk::grabVTKWidget(widget);
 	this->show();
 	properties["screenShot"] = screenShot;
