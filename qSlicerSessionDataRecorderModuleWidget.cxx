@@ -389,10 +389,35 @@ void qSlicerSessionDataRecorderModuleWidget
 ::onSaveSceneButtonClicked()
 {
 	Q_D( qSlicerSessionDataRecorderModuleWidget );
-	//QMessageBox::information(0, "Saving", "Saving Scene to Default Location");
+	//save scene ( pass in filename and properties array)
+	qSlicerIO::IOProperties properties_map;
+	//QString filename = "Scene-test.mrb";
+	
+	// Get absolute filename
+	QFileInfo sceneFileInfo = QFileInfo( QDir(qSlicerApplication::application()->mrmlScene()->GetRootDirectory()),
+                               QDate::currentDate().toString("yyyy-MM-dd") + "-Scene.mrb");
+
+	QString filename = QDateTime::currentDateTime().date().toString("'/'yyyy-MM-dd'");
+	if(d->lineEditStudentID->text().toStdString() != "")
+	{
+		filename.append("-Session-Student");
+		filename.append(d->lineEditStudentID->text());
+		filename.append(".mrb");
+	}
+	else
+	{
+		filename.append("-Session.mrb");
+	}
+
+	filename.prepend(qSlicerApplication::application()->mrmlScene()->GetRootDirectory());
+
+	properties_map["fileName"] = filename;
+
+	qSlicerApplication::application()->ioManager()->saveNodes("SceneFile",properties_map);
+
+	QMessageBox::information(0, "Saved scene to ", filename);
 
 	//create training session "sessions" table with fields "user_id", "datetime", "directory", "filename"
-
 	//retrieve database
 	QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
 	database.setDatabaseName("PerkTutorSessions.db");
@@ -403,45 +428,16 @@ void qSlicerSessionDataRecorderModuleWidget
 		{
 			QSqlQuery query;
 			query.exec("CREATE table sessions(sessionID integer primary key autoincrement, userID varchar[20], timestamp datetime default current_timestamp, filepath varchar(64));");
-			
-			QMessageBox::information(0, "Created new 'sessions' table ","Created new 'sessiond' table ");
+			QMessageBox::information(0, "Created new 'sessions' table ","Created new 'sessions' table ");
 		}
 
 		//add data to table
 		QSqlQuery query;
 		query.prepare("INSERT INTO sessions(userID, filepath) " "VALUES (:userID, :filepath)");
 		query.bindValue(":userID", d->lineEditStudentID->text());
-		//query.bindValue(":filepath", d->lineEditPassword->text());
+		query.bindValue(":filepath", filename);
 		query.exec();
-
-		//QMessageBox::information(0, "Inserted Data", "");
-	
 	}
-
-
-	//save scene in the same parent folder as the database for simplicity' sake and consistency. Check with Tamas.
-	//currently the default storage place for the database is C:/Slicer-Superbuild-Debug/Slicer-build
-
-	qSlicerApplication::application()->ioManager()->openSaveDataDialog();
-	
-	
-	/*  	//copied from: qSlicerSaveDataDialogPrivate::save() method 
-	QFileInfo file = this->sceneFile();
-	qSlicerIO::IOProperties properties["fileName"] = file.absoluteFilePath();
-
-	// create a screenShot of the full layout
-	QWidget* widget = qSlicerApplication::application()->layoutManager()->viewport();
-	QImage screenShot = ctk::grabVTKWidget(widget);
-	this->show();
-	properties["screenShot"] = screenShot;
-
-	qSlicerIOOptions* options = this->options(this->findSceneRow());
-	if (options)
-    {
-		//properties.unite(options->properties());
-    }
-	 bool res = qSlicerApplication::application()->coreIOManager()->saveNodes(QString("SceneFile"), properties);
-	//Q_D(qSlicerSaveDataDialog); //doesn't work ( does not assign d to the dialog..)
-*/
-
+	//vtkMRMLScene* scene = qSlicerApplication::mrmlScene();  /* illegal call of non-static member function*/
+	//qSlicerApplication::application()->ioManager()->openSaveDataDialog();  /* opens up save dialog */
 }
