@@ -36,11 +36,7 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="nodeTypes">
-        <stringlist>
-         <string>vtkMRMLTransformBufferNode</string>
-        </stringlist>
-       </property>
+       
        <property name="showHidden">
         <bool>true</bool>
        </property>

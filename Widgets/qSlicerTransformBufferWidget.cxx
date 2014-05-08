@@ -88,12 +88,6 @@ qSlicerTransformBufferWidget* qSlicerTransformBufferWidget
 }
 
 
-vtkMRMLTransformBufferNode* qSlicerTransformBufferWidget
-::GetBufferNode()
-{
-  Q_D(qSlicerTransformBufferWidget);
-  return vtkMRMLTransformBufferNode::SafeDownCast( d->BufferNodeComboBox->currentNode() );
-}
 
 
 void qSlicerTransformBufferWidget
@@ -148,21 +142,6 @@ void qSlicerTransformBufferWidget
     dialog.setLabelText( "Please wait while reading XML file..." );
     dialog.show();
 
-    // We should create a new buffer node if there isn't one already selected
-    vtkSmartPointer< vtkMRMLTransformBufferNode > importBufferNode = this->GetBufferNode();
-    if ( this->GetBufferNode() == NULL )
-    {
-      importBufferNode.TakeReference( vtkMRMLTransformBufferNode::SafeDownCast( this->mrmlScene()->CreateNodeByClass( "vtkMRMLTransformBufferNode" ) ) );
-      importBufferNode->SetScene( this->mrmlScene() );
-      this->mrmlScene()->AddNode( importBufferNode );
-    }
-    
-    dialog.setValue( 10 );
-    this->SessionDataRecorderLogic->ImportFromFile( importBufferNode, filename.toStdString() );
-
-    // Triggers the buffer node changed signal
-    d->BufferNodeComboBox->setCurrentNode( NULL );
-    d->BufferNodeComboBox->setCurrentNode( importBufferNode );
 
     dialog.close();
   }
@@ -178,10 +157,6 @@ void qSlicerTransformBufferWidget
 
   QString filename = QFileDialog::getSaveFileName( this, tr("Save buffer"), "", tr("XML Files (*.xml)") );
   
-  if ( ! filename.isEmpty() )
-  {
-    this->SessionDataRecorderLogic->ExportToFile( this->GetBufferNode(), filename.toStdString() );
-  }
 
   // No need to update the buffer - it is not changed
   this->updateWidget();
@@ -198,12 +173,4 @@ void qSlicerTransformBufferWidget
     return;
   }
 
-  if ( this->GetBufferNode() == NULL )
-  {
-    return;
-  }
-
-  this->BufferTransformsStatus = this->GetBufferNode()->TransformsStatus;
-  this->BufferMessagesStatus = this->GetBufferNode()->MessagesStatus;
-  this->BufferActiveTransformsStatus = this->GetBufferNode()->ActiveTransformsStatus;
 }

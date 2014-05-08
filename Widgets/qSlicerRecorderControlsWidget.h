@@ -29,7 +29,6 @@
 #include "ui_qSlicerRecorderControlsWidget.h"
 
 #include "qSlicerTransformBufferWidget.h"
-#include "vtkMRMLTransformBufferNode.h"
 
 class qSlicerRecorderControlsWidgetPrivate;
 

@@ -115,7 +115,7 @@ void qSlicerSessionDataRecorderModule::setup()
   
   // Register the IO
   app->coreIOManager()->registerIO( new qSlicerSessionDataRecorderIO( SessionDataRecorderLogic, this ) );
-  app->coreIOManager()->registerIO( new qSlicerNodeWriter( "SessionDataRecorder", QString( "TransformBuffer" ), QStringList() << "vtkMRMLTransformBufferNode", this ) );
+
  
 }
 

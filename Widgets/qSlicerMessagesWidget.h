@@ -29,7 +29,6 @@
 #include "ui_qSlicerMessagesWidget.h"
 
 #include "vtkSlicerSessionDataRecorderLogic.h"
-#include "vtkMRMLTransformBufferNode.h"
 #include "qSlicerTransformBufferWidget.h"
 
 class qSlicerMessagesWidgetPrivate;

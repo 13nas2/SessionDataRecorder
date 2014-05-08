@@ -119,17 +119,6 @@ void qSlicerMessagesWidget
 {
   Q_D(qSlicerMessagesWidget);  
 
-  double time = this->BufferWidget->SessionDataRecorderLogic->GetCurrentTimestamp();
-
-  QString messageName = QInputDialog::getText( this, tr("Add Message"), tr("Input text for the new message:") );
-
-  if ( messageName.isNull() )
-  {
-    return;
-  }
-
-  // Record the timestamp
-  this->BufferWidget->SessionDataRecorderLogic->AddMessage( this->BufferWidget->GetBufferNode(), messageName.toStdString(), time );
   
   this->updateWidget();
 }
@@ -140,7 +129,6 @@ void qSlicerMessagesWidget
 {
   Q_D(qSlicerMessagesWidget);
 
-  this->BufferWidget->SessionDataRecorderLogic->RemoveMessage( this->BufferWidget->GetBufferNode(), d->MessagesTableWidget->currentRow() );
 
   this->updateWidget();
 }
@@ -151,7 +139,6 @@ void qSlicerMessagesWidget
 {
   Q_D(qSlicerMessagesWidget);
 
-  this->BufferWidget->SessionDataRecorderLogic->ClearMessages( BufferWidget->GetBufferNode() );
   
   this->updateWidget();
 }
@@ -162,53 +149,5 @@ void qSlicerMessagesWidget
 {
   Q_D(qSlicerMessagesWidget);
 
-  if ( this->BufferWidget->SessionDataRecorderLogic == NULL )
-  {
-    return;
-  }
-
-  // Only update if the buffer has changed
-  if ( this->BufferStatus == this->BufferWidget->BufferStatus && this->BufferMessagesStatus == this->BufferWidget->BufferMessagesStatus )
-  {
-    return;
-  }
-  this->BufferStatus = this->BufferWidget->BufferStatus;
-  this->BufferMessagesStatus = this->BufferWidget->BufferMessagesStatus;
-
-  // Check what the current row and column are
-  int currentRow = d->MessagesTableWidget->currentRow();
-  int currentColumn = d->MessagesTableWidget->currentColumn();
-  int scrollPosition = d->MessagesTableWidget->verticalScrollBar()->value();
-  
-  // The only thing to do is update the table entries. Must ensure they are in sorted order (that's how they are stored in the buffer).
-  d->MessagesTableWidget->clear();
-  QStringList MessagesTableHeaders;
-  MessagesTableHeaders << "Time" << "Message";
-  d->MessagesTableWidget->setRowCount( 0 );
-  d->MessagesTableWidget->setColumnCount( 2 );
-  d->MessagesTableWidget->setHorizontalHeaderLabels( MessagesTableHeaders ); 
-  d->MessagesTableWidget->horizontalHeader()->setResizeMode( QHeaderView::Stretch );
-
-  if ( this->BufferWidget->GetBufferNode() == NULL )
-  {
-    return;
-  }
-
-  // Iterate over all the messages in the buffer and add them in order
-  d->MessagesTableWidget->setRowCount( this->BufferWidget->GetBufferNode()->GetNumMessages() );
-  for ( int i = 0; i < this->BufferWidget->GetBufferNode()->GetNumMessages(); i++ )
-  {
-    double messageTime = this->BufferWidget->GetBufferNode()->GetMessageAt(i)->GetTime() - this->BufferWidget->GetBufferNode()->GetMinimumTime();
-    QTableWidgetItem* timeItem = new QTableWidgetItem( QString::number( messageTime, 'f', 2 ) );
-    timeItem->setFlags( timeItem->flags() & ~Qt::ItemIsEditable );
-	QTableWidgetItem* messageItem = new QTableWidgetItem( QString::fromStdString( this->BufferWidget->GetBufferNode()->GetMessageAt(i)->GetName() ) );
-    messageItem->setFlags( messageItem->flags() & ~Qt::ItemIsEditable );
-    d->MessagesTableWidget->setItem( i, 0, timeItem );
-    d->MessagesTableWidget->setItem( i, 1, messageItem ); 
-  }
-
-  // Reset the current row and column to what they were
-  d->MessagesTableWidget->setCurrentCell( currentRow, currentColumn );
-  d->MessagesTableWidget->verticalScrollBar()->setValue( scrollPosition );
-
+ 
 }

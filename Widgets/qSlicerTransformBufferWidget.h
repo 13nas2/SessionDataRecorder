@@ -29,7 +29,6 @@
 #include "ui_qSlicerTransformBufferWidget.h"
 
 #include "vtkSlicerSessionDataRecorderLogic.h"
-#include "vtkMRMLTransformBufferNode.h"
 
 class qSlicerTransformBufferWidgetPrivate;
 
@@ -46,7 +45,6 @@ public:
   
   static qSlicerTransformBufferWidget* New( vtkSlicerSessionDataRecorderLogic* newSessionDataRecorderLogic );
   
-  vtkMRMLTransformBufferNode* GetBufferNode();
 
   vtkSlicerSessionDataRecorderLogic* SessionDataRecorderLogic;
 

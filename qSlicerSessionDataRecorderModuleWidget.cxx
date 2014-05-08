@@ -36,7 +36,6 @@
 #include "qMRMLNodeComboBox.h"
 #include "vtkMRMLViewNode.h"
 #include "vtkSlicerSessionDataRecorderLogic.h"
-#include "vtkMRMLTransformBufferNode.h"
 
 //#include <sqlite3.h>
 #include <QSqlError>
@@ -125,6 +124,7 @@ void qSlicerSessionDataRecorderModuleWidget::setup()
   connect(d->OkButton, SIGNAL( clicked() ), this, SLOT(onOKButtonClicked()));
   connect(d->saveSceneButton, SIGNAL(clicked()), this, SLOT( onSaveSceneButtonClicked()) );
   
+  //hide the 
   d->groupBox->hide();
 }
 
@@ -361,28 +361,6 @@ void qSlicerSessionDataRecorderModuleWidget
 		QMessageBox::critical(0, QObject::tr("Database Error"),database.lastError().text());
 	}
 	database.close();
-	
-	QDir directory = "/";
-
-	//select a directory using file dialog 
-    //QString path = QFileDialog::getExistingDirectory (this, tr("Directory"), directory.path());
-   
-	/*
-	if ( path.isNull() == false )
-    {
-        d->MessageLabel->setText(path);
-		this->updateWidget();
-    }
-	//write to the given directory
-	ofstream myfile (path.toStdString().append("/example.txt").c_str());
-	if (myfile.is_open())
-	{
-		myfile << "User logged in: " <<  d->lineEditUsername->text().toStdString().c_str();
-		cout << "Saved username to file";
-		myfile.close();
-	}
-	else cout << "Unable to open myfile";
-	*/
 }
 
 void qSlicerSessionDataRecorderModuleWidget
@@ -410,11 +388,8 @@ void qSlicerSessionDataRecorderModuleWidget
 	}
 
 	filename.prepend(qSlicerApplication::application()->mrmlScene()->GetRootDirectory());
-
 	properties_map["fileName"] = filename;
-
 	qSlicerApplication::application()->ioManager()->saveNodes("SceneFile",properties_map);
-
 	QMessageBox::information(0, "Saved scene to ", filename);
 
 	//create training session "sessions" table with fields "user_id", "datetime", "directory", "filename"

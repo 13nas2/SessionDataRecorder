@@ -89,12 +89,6 @@ bool qSlicerSessionDataRecorderIO::load(const IOProperties& properties)
   Q_D(qSlicerSessionDataRecorderIO);
   Q_ASSERT( properties.contains("fileName") );
   QString fileName = properties["fileName"].toString();
-  
-  vtkSmartPointer< vtkMRMLTransformBufferNode > importBufferNode;
-  importBufferNode.TakeReference( vtkMRMLTransformBufferNode::SafeDownCast( this->mrmlScene()->CreateNodeByClass( "vtkMRMLTransformBufferNode" ) ) );
-  importBufferNode->SetScene( this->mrmlScene() );
-  this->mrmlScene()->AddNode( importBufferNode );
-  d->SessionDataRecorderLogic->ImportFromFile( importBufferNode, fileName.toStdString() );
 
   return true; // TODO: Check to see read was successful first
 }

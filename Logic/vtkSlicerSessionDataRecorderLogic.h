@@ -36,7 +36,6 @@
 // MRML includes
 // class vtkMRMLIGTLConnectorNode;
 class vtkMRMLViewNode;
-#include "vtkMRMLTransformBufferNode.h"
 // STD includes
 #include <cstdlib>
 
@@ -71,25 +70,7 @@ public:
 
   void ProcessMRMLNodesEvents( vtkObject* caller, unsigned long event, void* callData );
   
-  double GetCurrentTimestamp();
 
-  // Functions to control recording.
-  void AddObservedTransformNode( vtkMRMLTransformBufferNode* bufferNode, vtkMRMLNode* node );
-  void RemoveObservedTransformNode( vtkMRMLTransformBufferNode* bufferNode, vtkMRMLNode* node );
-  bool IsObservedTransformNode( vtkMRMLTransformBufferNode* bufferNode, vtkMRMLNode* node );
-
-  void SetRecording( vtkMRMLTransformBufferNode* bufferNode, bool isRecording );
-  bool GetRecording( vtkMRMLTransformBufferNode* bufferNode );
-  void ClearTransforms( vtkMRMLTransformBufferNode* bufferNode );
-
-  void AddMessage( vtkMRMLTransformBufferNode* bufferNode, std::string name, double time );
-  void RemoveMessage( vtkMRMLTransformBufferNode* bufferNode, int index );
-  void ClearMessages( vtkMRMLTransformBufferNode* bufferNode );
-
-  void ImportFromFile( vtkMRMLTransformBufferNode* bufferNode, std::string fileName );
-  void ExportToFile( vtkMRMLTransformBufferNode* bufferNode, std::string fileName );
-
-  void AddTransform( vtkMRMLTransformBufferNode* bufferNode, vtkMRMLTransformNode* transformNode );
   
 private:
 
@@ -97,7 +78,6 @@ private:
   void operator=(const vtkSlicerSessionDataRecorderLogic&);               // Not implemented
   // Reference to the module MRML node.
 
-  std::vector<vtkMRMLTransformBufferNode*> RecordingBuffers;
   double Clock0;
 
 };
