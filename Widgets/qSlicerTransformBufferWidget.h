@@ -25,15 +25,15 @@
 #include "qSlicerWidget.h"
 
 // FooBar Widgets includes
-#include "qSlicerSessionDataRecorderModuleWidgetsExport.h"
+#include "qSlicerSessionManagerModuleWidgetsExport.h"
 #include "ui_qSlicerTransformBufferWidget.h"
 
-#include "vtkSlicerSessionDataRecorderLogic.h"
+#include "vtkSlicerSessionManagerLogic.h"
 
 class qSlicerTransformBufferWidgetPrivate;
 
 /// \ingroup Slicer_QtModules_CreateModels
-class Q_SLICER_MODULE_SESSIONDATARECORDER_WIDGETS_EXPORT 
+class Q_SLICER_MODULE_SESSIONMANAGER_WIDGETS_EXPORT 
 qSlicerTransformBufferWidget : public qSlicerWidget
 {
   Q_OBJECT
@@ -43,10 +43,10 @@ public:
   virtual ~qSlicerTransformBufferWidget();
 
   
-  static qSlicerTransformBufferWidget* New( vtkSlicerSessionDataRecorderLogic* newSessionDataRecorderLogic );
+  static qSlicerTransformBufferWidget* New( vtkSlicerSessionManagerLogic* newSessionManagerLogic );
   
 
-  vtkSlicerSessionDataRecorderLogic* SessionDataRecorderLogic;
+  vtkSlicerSessionManagerLogic* SessionManagerLogic;
 
   // This widget will keep track if the buffer is changed
   unsigned long BufferStatus;

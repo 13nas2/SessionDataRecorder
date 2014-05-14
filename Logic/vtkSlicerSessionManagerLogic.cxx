@@ -15,8 +15,8 @@
 
 ==============================================================================*/
 
-// SessionDataRecorder includes
-#include "vtkSlicerSessionDataRecorderLogic.h"
+// SessionManager includes
+#include "vtkSlicerSessionManagerLogic.h"
 
 
 // MRML includes
@@ -30,34 +30,34 @@
 #include <cassert>
 
 //----------------------------------------------------------------------------
-vtkStandardNewMacro(vtkSlicerSessionDataRecorderLogic);
+vtkStandardNewMacro(vtkSlicerSessionManagerLogic);
 
 //----------------------------------------------------------------------------
-vtkSlicerSessionDataRecorderLogic::vtkSlicerSessionDataRecorderLogic()
+vtkSlicerSessionManagerLogic::vtkSlicerSessionManagerLogic()
 {
 }
 
 //----------------------------------------------------------------------------
-vtkSlicerSessionDataRecorderLogic::~vtkSlicerSessionDataRecorderLogic()
+vtkSlicerSessionManagerLogic::~vtkSlicerSessionManagerLogic()
 {
 }
 
 
 
-void vtkSlicerSessionDataRecorderLogic::PrintSelf(ostream& os, vtkIndent indent)
+void vtkSlicerSessionManagerLogic::PrintSelf(ostream& os, vtkIndent indent)
 {
 }
 
 
 
-void vtkSlicerSessionDataRecorderLogic::InitializeEventListeners()
+void vtkSlicerSessionManagerLogic::InitializeEventListeners()
 {
 
 }
 
 
 
-void vtkSlicerSessionDataRecorderLogic::RegisterNodes()
+void vtkSlicerSessionManagerLogic::RegisterNodes()
 {
   if( ! this->GetMRMLScene() )
   {
@@ -68,21 +68,21 @@ void vtkSlicerSessionDataRecorderLogic::RegisterNodes()
 
 
 
-void vtkSlicerSessionDataRecorderLogic::UpdateFromMRMLScene()
+void vtkSlicerSessionManagerLogic::UpdateFromMRMLScene()
 {
   assert(this->GetMRMLScene() != 0);
 }
 
 
 
-void vtkSlicerSessionDataRecorderLogic
+void vtkSlicerSessionManagerLogic
 ::OnMRMLSceneNodeAdded(vtkMRMLNode* vtkNotUsed(node))
 {
   assert(this->GetMRMLScene() != 0);
 }
 
 
-void vtkSlicerSessionDataRecorderLogic
+void vtkSlicerSessionManagerLogic
 ::ProcessMRMLNodesEvents( vtkObject* caller, unsigned long event, void* callData )
 {
   
@@ -90,7 +90,7 @@ void vtkSlicerSessionDataRecorderLogic
 }
 
 
-void vtkSlicerSessionDataRecorderLogic
+void vtkSlicerSessionManagerLogic
 ::OnMRMLSceneNodeRemoved(vtkMRMLNode* vtkNotUsed(node))
 {
   assert(this->GetMRMLScene() != 0);

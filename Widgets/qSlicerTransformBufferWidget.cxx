@@ -75,10 +75,10 @@ qSlicerTransformBufferWidget
 
 
 qSlicerTransformBufferWidget* qSlicerTransformBufferWidget
-::New( vtkSlicerSessionDataRecorderLogic* newSessionDataRecorderLogic )
+::New( vtkSlicerSessionManagerLogic* newSessionManagerLogic )
 {
   qSlicerTransformBufferWidget* newTransformBufferWidget = new qSlicerTransformBufferWidget();
-  newTransformBufferWidget->SessionDataRecorderLogic = newSessionDataRecorderLogic;
+  newTransformBufferWidget->SessionManagerLogic = newSessionManagerLogic;
   newTransformBufferWidget->BufferStatus = 0;
   newTransformBufferWidget->BufferTransformsStatus = 0;
   newTransformBufferWidget->BufferMessagesStatus = 0;
@@ -96,7 +96,7 @@ void qSlicerTransformBufferWidget
   Q_D(qSlicerTransformBufferWidget);
 
   d->setupUi(this);
-  this->setMRMLScene( this->SessionDataRecorderLogic->GetMRMLScene() );
+  this->setMRMLScene( this->SessionManagerLogic->GetMRMLScene() );
 
   connect( d->BufferNodeComboBox, SIGNAL( currentNodeChanged( vtkMRMLNode* ) ), this, SLOT( onCurrentBufferNodeChanged() ) );
 
@@ -168,7 +168,7 @@ void qSlicerTransformBufferWidget
 {
   Q_D(qSlicerTransformBufferWidget);
 
-  if ( this->SessionDataRecorderLogic == NULL )
+  if ( this->SessionManagerLogic == NULL )
   {
     return;
   }

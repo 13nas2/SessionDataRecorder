@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 2.8.7)
 
 #-----------------------------------------------------------------------------
 # Module name (usually identique to the directory name)
-set(MODULE_NAME "SessionDataRecorder")
-set(MODULE_TITLE "Session Data Recorder")
+set(MODULE_NAME "SessionManager")
+set(MODULE_TITLE "Session Manager")
 
 string(TOUPPER ${MODULE_NAME} MODULE_NAME_UPPER)
 

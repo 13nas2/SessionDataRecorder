@@ -20,8 +20,8 @@
 // Qt includes
 
 // SlicerQt includes
-#include "qSlicerSessionDataRecorderModuleWidget.h"
-#include "ui_qSlicerSessionDataRecorderModule.h"
+#include "qSlicerSessionManagerModuleWidget.h"
+#include "ui_qSlicerSessionManagerModule.h"
 #include "qSlicerIO.h"
 #include "qSlicerIOManager.h"
 #include "qSlicerApplication.h"
@@ -30,12 +30,12 @@
 // MRMLWidgets includes
 #include <qMRMLUtils.h>
 
-#include "vtkSlicerSessionDataRecorderLogic.h"
+#include "vtkSlicerSessionManagerLogic.h"
 #include "vtkMRMLLinearTransformNode.h"
 
 #include "qMRMLNodeComboBox.h"
 #include "vtkMRMLViewNode.h"
-#include "vtkSlicerSessionDataRecorderLogic.h"
+#include "vtkSlicerSessionManagerLogic.h"
 
 //#include <sqlite3.h>
 #include <QSqlError>
@@ -47,18 +47,18 @@
 
 
 //-----------------------------------------------------------------------------
-/// \ingroup Slicer_QtModules_SessionDataRecorder
-class qSlicerSessionDataRecorderModuleWidgetPrivate: public Ui_qSlicerSessionDataRecorderModule
+/// \ingroup Slicer_QtModules_SessionManager
+class qSlicerSessionManagerModuleWidgetPrivate: public Ui_qSlicerSessionManagerModule
 {
-  Q_DECLARE_PUBLIC( qSlicerSessionDataRecorderModuleWidget ); 
+  Q_DECLARE_PUBLIC( qSlicerSessionManagerModuleWidget ); 
 
 protected:
-  qSlicerSessionDataRecorderModuleWidget* const q_ptr;
+  qSlicerSessionManagerModuleWidget* const q_ptr;
 public:
-  qSlicerSessionDataRecorderModuleWidgetPrivate( qSlicerSessionDataRecorderModuleWidget& object );
-  ~qSlicerSessionDataRecorderModuleWidgetPrivate();
+  qSlicerSessionManagerModuleWidgetPrivate( qSlicerSessionManagerModuleWidget& object );
+  ~qSlicerSessionManagerModuleWidgetPrivate();
 
-  vtkSlicerSessionDataRecorderLogic* logic() const;
+  vtkSlicerSessionManagerLogic* logic() const;
 
   // Add embedded widgets here
   qSlicerTransformBufferWidget* TransformBufferWidget;
@@ -67,44 +67,44 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-// qSlicerSessionDataRecorderModuleWidgetPrivate methods
+// qSlicerSessionManagerModuleWidgetPrivate methods
 
-qSlicerSessionDataRecorderModuleWidgetPrivate::qSlicerSessionDataRecorderModuleWidgetPrivate( qSlicerSessionDataRecorderModuleWidget& object ) : q_ptr(&object)
+qSlicerSessionManagerModuleWidgetPrivate::qSlicerSessionManagerModuleWidgetPrivate( qSlicerSessionManagerModuleWidget& object ) : q_ptr(&object)
 {
 }
 
 //-----------------------------------------------------------------------------
 
-qSlicerSessionDataRecorderModuleWidgetPrivate::~qSlicerSessionDataRecorderModuleWidgetPrivate()
+qSlicerSessionManagerModuleWidgetPrivate::~qSlicerSessionManagerModuleWidgetPrivate()
 {
 }
 
 
-vtkSlicerSessionDataRecorderLogic* qSlicerSessionDataRecorderModuleWidgetPrivate::logic() const
+vtkSlicerSessionManagerLogic* qSlicerSessionManagerModuleWidgetPrivate::logic() const
 {
-  Q_Q( const qSlicerSessionDataRecorderModuleWidget );
-  return vtkSlicerSessionDataRecorderLogic::SafeDownCast( q->logic() );
+  Q_Q( const qSlicerSessionManagerModuleWidget );
+  return vtkSlicerSessionManagerLogic::SafeDownCast( q->logic() );
 }
 
 
 //-----------------------------------------------------------------------------
-// qSlicerSessionDataRecorderModuleWidget methods
+// qSlicerSessionManagerModuleWidget methods
 
 //-----------------------------------------------------------------------------
-qSlicerSessionDataRecorderModuleWidget::qSlicerSessionDataRecorderModuleWidget(QWidget* _parent)
+qSlicerSessionManagerModuleWidget::qSlicerSessionManagerModuleWidget(QWidget* _parent)
   : Superclass( _parent )
-  , d_ptr( new qSlicerSessionDataRecorderModuleWidgetPrivate( *this ) )
+  , d_ptr( new qSlicerSessionManagerModuleWidgetPrivate( *this ) )
 {
 }
 
 
-qSlicerSessionDataRecorderModuleWidget::~qSlicerSessionDataRecorderModuleWidget()
+qSlicerSessionManagerModuleWidget::~qSlicerSessionManagerModuleWidget()
 {
 }
 
-void qSlicerSessionDataRecorderModuleWidget::setup()
+void qSlicerSessionManagerModuleWidget::setup()
 {
-  Q_D(qSlicerSessionDataRecorderModuleWidget);
+  Q_D(qSlicerSessionManagerModuleWidget);
 
   d->setupUi(this);
 
@@ -117,34 +117,51 @@ void qSlicerSessionDataRecorderModuleWidget::setup()
   connect( t,  SIGNAL( timeout() ), this, SLOT( updateWidget() ) );
   t->start(10);
 
-  //connect button
-  connect( d->saveButton, SIGNAL( clicked() ), this, SLOT( onSaveButtonClicked() ) ); 
-  connect(d->pushButtonCreate, SIGNAL( clicked() ), this, SLOT( onCreateButtonClicked() ) ); 
-  connect(d->pushButtonLogin, SIGNAL( clicked() ), this, SLOT( onLoginButtonClicked() ) ); 
-  connect(d->OkButton, SIGNAL( clicked() ), this, SLOT(onOKButtonClicked()));
+  //connect buttons
+  connect(d->pushButtonCreateTrainee, SIGNAL( clicked() ), this, SLOT( onCreateTraineeButtonClicked() ) ); 
+  connect(d->pushButtonCreateUser, SIGNAL( clicked() ), this, SLOT( onCreateUserButtonClicked() ) ); 
+  connect(d->pushButtonLogin, SIGNAL( clicked() ), this, SLOT( onLoginButtonClicked() ) );
   connect(d->saveSceneButton, SIGNAL(clicked()), this, SLOT( onSaveSceneButtonClicked()) );
+
+  //set up load session tab with 
   
-  //hide the 
+  //hide everything except login fields
   d->groupBox->hide();
+  d->groupBoxTraineeData->hide();
 }
 
+void qSlicerSessionManagerModuleWidget::loadSessionSetup()
+{
+	Q_D( qSlicerSessionManagerModuleWidget );
 
-void qSlicerSessionDataRecorderModuleWidget::enter()
+	//populate the combo box with student ids in the database
+	//need to open database, check for sessions table, get records with unique user id field.
+	
+
+	//when user actually selects
+
+
+
+	
+
+}
+
+void qSlicerSessionManagerModuleWidget::enter()
 {
   this->Superclass::enter();
   this->updateWidget();
 }
 
-void qSlicerSessionDataRecorderModuleWidget
+void qSlicerSessionManagerModuleWidget
 ::updateWidget()
 {
-  Q_D( qSlicerSessionDataRecorderModuleWidget );   
+  Q_D( qSlicerSessionManagerModuleWidget );   
 }
 
-void qSlicerSessionDataRecorderModuleWidget
-::onCreateButtonClicked()
+void qSlicerSessionManagerModuleWidget
+::onCreateUserButtonClicked()
 {
-	Q_D( qSlicerSessionDataRecorderModuleWidget );
+	Q_D( qSlicerSessionManagerModuleWidget );
 
 	//retrieve database
 	QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
@@ -205,24 +222,22 @@ void qSlicerSessionDataRecorderModuleWidget
 }
 
 
-void qSlicerSessionDataRecorderModuleWidget
+
+
+void qSlicerSessionManagerModuleWidget
 ::onLoginButtonClicked()
 {
-	/*user enters login information and clicks "login"
-	  check that the lineEdit fields are not empty
+	/*user enters login information and clicks "login". Check that the lineEdit fields are not empty
 	  if user/password pair exists in the database, user is now logged in - display a message either way.
     */
-
-	// after user created or logged in, hide authentication box.
-	Q_D( qSlicerSessionDataRecorderModuleWidget );
+	Q_D( qSlicerSessionManagerModuleWidget );
 
 	//retrieve database
 	QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
 	database.setDatabaseName("PerkTutorSessions.db");
 	if(database.open())
 	{
-		//if database opens successfully, check whether there is a users table.
-		//if not, then create one.
+		//if database opens successfully, check whether there is a users table. If not, create one.
 		QStringList tables = database.tables(QSql::Tables);
 		if(!tables.contains("users"))
 		{
@@ -231,7 +246,6 @@ void qSlicerSessionDataRecorderModuleWidget
 				//create users table and add admin user
 				QSqlQuery query;
 				query.exec("CREATE table users(username varchar(30) primary key, password varchar(30));");
-
 				query.prepare("INSERT INTO users (username, password) " "VALUES (:username, :password)");
 				query.bindValue(":username", "admin");
 				query.bindValue(":password", "default");
@@ -240,17 +254,17 @@ void qSlicerSessionDataRecorderModuleWidget
 				QMessageBox::information(0, "Login successful", "You are now logged in as admin");
 				d->groupBoxAuthentication->setTitle("Admininstration: Create New User Accounts");
 				d->pushButtonLogin->hide();
-				d->pushButtonCreate->setEnabled(true);
-				d->pushButtonCreate->setAutoDefault(true);
+				d->pushButtonCreateUser->setEnabled(true);
+				d->pushButtonCreateUser->setAutoDefault(true);
 				d->lineEditPassword->setText("");
 				d->lineEditUsername->setText("");
 				d->groupBox->show();
+				d->groupBoxTraineeData->show();
 			}
 			else
 			{
 				QMessageBox::information(0, "Error", "User does not exist or the password is incorrect. Log in as admin to create new user account.");
 			}
-				
 		}
 		else
 		{
@@ -270,11 +284,10 @@ void qSlicerSessionDataRecorderModuleWidget
 						QMessageBox::information(0, "Login successful", "You are now logged in as admin");
 						d->groupBoxAuthentication->setTitle("Admininstration: Create New User Accounts");
 						d->pushButtonLogin->hide();
-						d->pushButtonCreate->setEnabled(true);
-						d->pushButtonCreate->setShortcut(Qt::Key_Return);
+						d->pushButtonCreateUser->setEnabled(true);
+						d->pushButtonCreateUser->setShortcut(Qt::Key_Return);
 						d->lineEditPassword->setText("");
 						d->lineEditUsername->setText("");
-						d->lineEditUsername->setFocus();
 					}
 					else
 					{
@@ -282,6 +295,8 @@ void qSlicerSessionDataRecorderModuleWidget
 						d->groupBoxAuthentication->hide();
 					}
 					d->groupBox->show();
+					d->groupBoxTraineeData->show();  //only admin can add trainees?
+
 				}
 				else
 				{
@@ -298,22 +313,14 @@ void qSlicerSessionDataRecorderModuleWidget
 	database.close();
 }
 
-void qSlicerSessionDataRecorderModuleWidget
-::onOKButtonClicked()
+
+void qSlicerSessionManagerModuleWidget
+::onCreateTraineeButtonClicked()
 {
-	Q_D( qSlicerSessionDataRecorderModuleWidget );
-	d->groupBox->show();
-}
+	QMessageBox::information(0, "Note", "creating trainee");
 
-void qSlicerSessionDataRecorderModuleWidget
-::onSaveButtonClicked()
-{
-	Q_D( qSlicerSessionDataRecorderModuleWidget );
+	Q_D( qSlicerSessionManagerModuleWidget );
 
-	//mrml scene's root directory is C:/Users/Nisrin/Desktop
-	//when user clicks SAVE the mrml scene is automatically saved to a given location.
-
-	//save the studentID in the database, 
 	//retrieve database
 	QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
 	database.setDatabaseName("PerkTutorSessions.db");
@@ -325,7 +332,7 @@ void qSlicerSessionDataRecorderModuleWidget
 		if(!tables.contains("students"))
 		{
 			QSqlQuery query;
-			query.exec("CREATE table students(id int primary key, name varchar(30));");
+			query.exec("CREATE table students(id int primary key, firstname varchar(256), lastname varchar(256));");
 			QMessageBox::information(0, "Creating Table students	", "Executed create query");
 		}
 
@@ -344,11 +351,11 @@ void qSlicerSessionDataRecorderModuleWidget
 				QMessageBox::information(0, "Student Exists", "Don't need to enter any information, this student exists in the database");
 			}
 			else{
-				//ask user for student's name and other information. *** TO DO***
 				QSqlQuery query;
-				query.prepare("INSERT INTO students(id, firstname) " "VALUES (:id, :firstname)");
+				query.prepare("INSERT INTO students(id, firstname, lastname) " "VALUES (:id, :firstname, :lastname)");
 				query.bindValue(":id", d->lineEditStudentID->text());
 				query.bindValue(":firstname", d->lineEditFirstName->text());
+				query.bindValue(":lastname", d->lineEditLastName->text());
 				query.exec();
 
 				QString s = "You have created new student:  ";
@@ -363,10 +370,11 @@ void qSlicerSessionDataRecorderModuleWidget
 	database.close();
 }
 
-void qSlicerSessionDataRecorderModuleWidget
+
+void qSlicerSessionManagerModuleWidget
 ::onSaveSceneButtonClicked()
 {
-	Q_D( qSlicerSessionDataRecorderModuleWidget );
+	Q_D( qSlicerSessionManagerModuleWidget );
 	//save scene ( pass in filename and properties array)
 	qSlicerIO::IOProperties properties_map;
 	//QString filename = "Scene-test.mrb";
@@ -392,7 +400,7 @@ void qSlicerSessionDataRecorderModuleWidget
 	qSlicerApplication::application()->ioManager()->saveNodes("SceneFile",properties_map);
 	QMessageBox::information(0, "Saved scene to ", filename);
 
-	//create training session "sessions" table with fields "user_id", "datetime", "directory", "filename"
+	//create training session "sessions" table with fields "user_id", "datetime", "filepath"   [ADD "associated_study" field?)
 	//retrieve database
 	QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
 	database.setDatabaseName("PerkTutorSessions.db");
@@ -402,7 +410,7 @@ void qSlicerSessionDataRecorderModuleWidget
 		if(!tables.contains("sessions"))
 		{
 			QSqlQuery query;
-			query.exec("CREATE table sessions(sessionID integer primary key autoincrement, userID varchar[20], timestamp datetime default current_timestamp, filepath varchar(64));");
+			query.exec("CREATE table sessions(sessionID integer primary key autoincrement, userID varchar[32], studyname varchar[256], timestamp datetime default current_timestamp, filepath varchar(256));");
 			QMessageBox::information(0, "Created new 'sessions' table ","Created new 'sessions' table ");
 		}
 

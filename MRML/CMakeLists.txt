@@ -8,10 +8,10 @@ project(vtkSlicer${MODULE_NAME}ModuleMRML)
 set(module_mrml_name "${PROJECT_NAME}")
 
 # The header '${module_mrml_name}Export.h' will be automatically configured.
-set(module_mrml_export_directive "VTK_SLICER_SESSIONDATARECORDER_MODULE_MRML_EXPORT")
+set(module_mrml_export_directive "VTK_SLICER_SESSIONMANAGER_MODULE_MRML_EXPORT")
 
 # Debug
-#MESSAGE( STATUS "SessionDataRecorder ====================================" )
+#MESSAGE( STATUS "SessionManager ====================================" )
 #MESSAGE( STATUS "Included: ${Slicer_BINARY_DIR}/Modules/Loadable/OpenIGTLinkIF" )
 
 

@@ -18,28 +18,28 @@
 
 ==============================================================================*/
 
-#ifndef __qSlicerSessionDataRecorderIO_h
-#define __qSlicerSessionDataRecorderIO_h
+#ifndef __qSlicerSessionManagerIO_h
+#define __qSlicerSessionManagerIO_h
 
 // SlicerQt includes
 #include "qSlicerFileReader.h"
-class qSlicerSessionDataRecorderIOPrivate;
+class qSlicerSessionManagerIOPrivate;
 
 // Slicer includes
-class vtkSlicerSessionDataRecorderLogic;
+class vtkSlicerSessionManagerLogic;
 
 //-----------------------------------------------------------------------------
-class qSlicerSessionDataRecorderIO
+class qSlicerSessionManagerIO
   : public qSlicerFileReader
 {
   Q_OBJECT
 public:
   typedef qSlicerFileReader Superclass;
-  qSlicerSessionDataRecorderIO( vtkSlicerSessionDataRecorderLogic* newSessionDataRecorderLogic = 0, QObject* parent = 0 );
-  virtual ~qSlicerSessionDataRecorderIO();
+  qSlicerSessionManagerIO( vtkSlicerSessionManagerLogic* newSessionManagerLogic = 0, QObject* parent = 0 );
+  virtual ~qSlicerSessionManagerIO();
 
-  void setSessionDataRecorderLogic( vtkSlicerSessionDataRecorderLogic* newSessionDataRecorderLogic);
-  vtkSlicerSessionDataRecorderLogic* SessionDataRecorderLogic() const;
+  void setSessionManagerLogic( vtkSlicerSessionManagerLogic* newSessionManagerLogic);
+  vtkSlicerSessionManagerLogic* SessionManagerLogic() const;
 
   virtual QString description() const;
   virtual IOFileType fileType() const;
@@ -48,11 +48,11 @@ public:
   virtual bool load( const IOProperties& properties );
   
 protected:
-  QScopedPointer< qSlicerSessionDataRecorderIOPrivate > d_ptr;
+  QScopedPointer< qSlicerSessionManagerIOPrivate > d_ptr;
 
 private:
-  Q_DECLARE_PRIVATE( qSlicerSessionDataRecorderIO );
-  Q_DISABLE_COPY( qSlicerSessionDataRecorderIO );
+  Q_DECLARE_PRIVATE( qSlicerSessionManagerIO );
+  Q_DISABLE_COPY( qSlicerSessionManagerIO );
 };
 
 #endif

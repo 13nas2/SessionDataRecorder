@@ -15,18 +15,18 @@
 
 ==============================================================================*/
 
-#ifndef __qSlicerSessionDataRecorderModule_h
-#define __qSlicerSessionDataRecorderModule_h
+#ifndef __qSlicerSessionManagerModule_h
+#define __qSlicerSessionManagerModule_h
 
 // SlicerQt includes
 #include "qSlicerLoadableModule.h"
 
-#include "qSlicerSessionDataRecorderModuleExport.h"
+#include "qSlicerSessionManagerModuleExport.h"
 
-class qSlicerSessionDataRecorderModulePrivate;
+class qSlicerSessionManagerModulePrivate;
 
-/// \ingroup Slicer_QtModules_SessionDataRecorder
-class Q_SLICER_QTMODULES_SESSIONDATARECORDER_EXPORT qSlicerSessionDataRecorderModule :
+/// \ingroup Slicer_QtModules_SessionManager
+class Q_SLICER_QTMODULES_SESSIONMANAGER_EXPORT qSlicerSessionManagerModule :
   public qSlicerLoadableModule
 {
   Q_OBJECT
@@ -35,8 +35,8 @@ class Q_SLICER_QTMODULES_SESSIONDATARECORDER_EXPORT qSlicerSessionDataRecorderMo
 public:
 
   typedef qSlicerLoadableModule Superclass;
-  explicit qSlicerSessionDataRecorderModule(QObject *parent=0);
-  virtual ~qSlicerSessionDataRecorderModule();
+  explicit qSlicerSessionManagerModule(QObject *parent=0);
+  virtual ~qSlicerSessionManagerModule();
 
   qSlicerGetTitleMacro(QTMODULE_TITLE);
   
@@ -66,11 +66,11 @@ protected:
   virtual vtkMRMLAbstractLogic* createLogic();
 
 protected:
-  QScopedPointer<qSlicerSessionDataRecorderModulePrivate> d_ptr;
+  QScopedPointer<qSlicerSessionManagerModulePrivate> d_ptr;
 
 private:
-  Q_DECLARE_PRIVATE(qSlicerSessionDataRecorderModule);
-  Q_DISABLE_COPY(qSlicerSessionDataRecorderModule);
+  Q_DECLARE_PRIVATE(qSlicerSessionManagerModule);
+  Q_DISABLE_COPY(qSlicerSessionManagerModule);
 
 };
 

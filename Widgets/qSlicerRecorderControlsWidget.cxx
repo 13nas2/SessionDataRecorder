@@ -93,7 +93,7 @@ void qSlicerRecorderControlsWidget
   Q_D(qSlicerRecorderControlsWidget);
 
   d->setupUi(this);
-  this->setMRMLScene( this->BufferWidget->SessionDataRecorderLogic->GetMRMLScene() );
+  this->setMRMLScene( this->BufferWidget->SessionManagerLogic->GetMRMLScene() );
 
   connect( d->TransformCheckableComboBox, SIGNAL( checkedNodesChanged() ), this, SLOT( onCheckedTransformsChanged() ) );
 
@@ -139,7 +139,7 @@ void qSlicerRecorderControlsWidget
 {
   Q_D(qSlicerRecorderControlsWidget);  
   
-  // The observed transforms should be dealt with in the SessionDataRecorder logic
+  // The observed transforms should be dealt with in the SessionManager logic
   
   
   this->updateWidget();
@@ -170,7 +170,7 @@ void qSlicerRecorderControlsWidget
 {
   Q_D(qSlicerRecorderControlsWidget);
 
-  if ( this->BufferWidget->SessionDataRecorderLogic == NULL )
+  if ( this->BufferWidget->SessionManagerLogic == NULL )
   {
     return;
   }

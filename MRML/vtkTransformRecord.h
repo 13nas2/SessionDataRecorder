@@ -6,7 +6,7 @@
   or http://www.slicer.org/copyright/copyright.txt for details.
 
   Program:   3D Slicer
-  Module:    $RCSfile: vtkMRMLSessionDataRecorderNode.h,v $
+  Module:    $RCSfile: vtkMRMLSessionManagerNode.h,v $
   Date:      $Date: 2006/03/19 17:12:28 $
   Version:   $Revision: 1.6 $
 
@@ -28,12 +28,12 @@
 #include "vtkObjectFactory.h"
 #include "vtkXMLDataElement.h"
 
-// SessionDataRecorder includes
-#include "vtkSlicerSessionDataRecorderModuleMRMLExport.h"
+// SessionManager includes
+#include "vtkSlicerSessionManagerModuleMRMLExport.h"
 
 
 
-class VTK_SLICER_SESSIONDATARECORDER_MODULE_MRML_EXPORT
+class VTK_SLICER_SESSIONMANAGER_MODULE_MRML_EXPORT
 vtkTransformRecord : public vtkObject
 {
 public:

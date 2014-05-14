@@ -21,10 +21,10 @@
 // Qt includes
 
 // SlicerQt includes
-#include "qSlicerSessionDataRecorderIO.h"
+#include "qSlicerSessionManagerIO.h"
 
 // Logic includes
-#include "vtkSlicerSessionDataRecorderLogic.h"
+#include "vtkSlicerSessionManagerLogic.h"
 
 // MRML includes
 
@@ -32,61 +32,61 @@
 #include <vtkSmartPointer.h>
 
 //-----------------------------------------------------------------------------
-class qSlicerSessionDataRecorderIOPrivate
+class qSlicerSessionManagerIOPrivate
 {
 public:
-  vtkSmartPointer<vtkSlicerSessionDataRecorderLogic> SessionDataRecorderLogic;
+  vtkSmartPointer<vtkSlicerSessionManagerLogic> SessionManagerLogic;
 };
 
 //-----------------------------------------------------------------------------
-qSlicerSessionDataRecorderIO::qSlicerSessionDataRecorderIO( vtkSlicerSessionDataRecorderLogic* newSessionDataRecorderLogic, QObject* _parent)
+qSlicerSessionManagerIO::qSlicerSessionManagerIO( vtkSlicerSessionManagerLogic* newSessionManagerLogic, QObject* _parent)
   : Superclass(_parent)
-  , d_ptr(new qSlicerSessionDataRecorderIOPrivate)
+  , d_ptr(new qSlicerSessionManagerIOPrivate)
 {
-  this->setSessionDataRecorderLogic( newSessionDataRecorderLogic );
+  this->setSessionManagerLogic( newSessionManagerLogic );
 }
 
 //-----------------------------------------------------------------------------
-qSlicerSessionDataRecorderIO::~qSlicerSessionDataRecorderIO()
+qSlicerSessionManagerIO::~qSlicerSessionManagerIO()
 {
 }
 
 //-----------------------------------------------------------------------------
-void qSlicerSessionDataRecorderIO::setSessionDataRecorderLogic(vtkSlicerSessionDataRecorderLogic* newSessionDataRecorderLogic)
+void qSlicerSessionManagerIO::setSessionManagerLogic(vtkSlicerSessionManagerLogic* newSessionManagerLogic)
 {
-  Q_D(qSlicerSessionDataRecorderIO);
-  d->SessionDataRecorderLogic = newSessionDataRecorderLogic;
+  Q_D(qSlicerSessionManagerIO);
+  d->SessionManagerLogic = newSessionManagerLogic;
 }
 
 //-----------------------------------------------------------------------------
-vtkSlicerSessionDataRecorderLogic* qSlicerSessionDataRecorderIO::SessionDataRecorderLogic() const
+vtkSlicerSessionManagerLogic* qSlicerSessionManagerIO::SessionManagerLogic() const
 {
-  Q_D(const qSlicerSessionDataRecorderIO);
-  return d->SessionDataRecorderLogic;
+  Q_D(const qSlicerSessionManagerIO);
+  return d->SessionManagerLogic;
 }
 
 //-----------------------------------------------------------------------------
-QString qSlicerSessionDataRecorderIO::description() const
+QString qSlicerSessionManagerIO::description() const
 {
   return "Transform Buffer";
 }
 
 //-----------------------------------------------------------------------------
-qSlicerIO::IOFileType qSlicerSessionDataRecorderIO::fileType() const
+qSlicerIO::IOFileType qSlicerSessionManagerIO::fileType() const
 {
   return QString("Transform Buffer");
 }
 
 //-----------------------------------------------------------------------------
-QStringList qSlicerSessionDataRecorderIO::extensions() const
+QStringList qSlicerSessionManagerIO::extensions() const
 {
   return QStringList() << "Transform Buffer (*.xml)";
 }
 
 //-----------------------------------------------------------------------------
-bool qSlicerSessionDataRecorderIO::load(const IOProperties& properties)
+bool qSlicerSessionManagerIO::load(const IOProperties& properties)
 {
-  Q_D(qSlicerSessionDataRecorderIO);
+  Q_D(qSlicerSessionManagerIO);
   Q_ASSERT( properties.contains("fileName") );
   QString fileName = properties["fileName"].toString();
 

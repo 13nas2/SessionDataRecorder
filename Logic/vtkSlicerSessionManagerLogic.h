@@ -15,14 +15,14 @@
 
 ==============================================================================*/
 
-// .NAME vtkSlicerSessionDataRecorderLogic - slicer logic class for volumes manipulation
+// .NAME vtkSlicerSessionManagerLogic - slicer logic class for volumes manipulation
 // .SECTION Description
 // This class manages the logic associated with reading, saving,
 // and changing propertied of the volumes
 
 
-#ifndef __vtkSlicerSessionDataRecorderLogic_h
-#define __vtkSlicerSessionDataRecorderLogic_h
+#ifndef __vtkSlicerSessionManagerLogic_h
+#define __vtkSlicerSessionManagerLogic_h
 
 // Slicer includes
 #include "vtkSlicerModuleLogic.h"
@@ -39,24 +39,24 @@ class vtkMRMLViewNode;
 // STD includes
 #include <cstdlib>
 
-#include "vtkSlicerSessionDataRecorderModuleLogicExport.h"
+#include "vtkSlicerSessionManagerModuleLogicExport.h"
 
 
 
-/// \ingroup Slicer_QtModules_SessionDataRecorder
-class VTK_SLICER_SESSIONDATARECORDER_MODULE_LOGIC_EXPORT vtkSlicerSessionDataRecorderLogic :
+/// \ingroup Slicer_QtModules_SessionManager
+class VTK_SLICER_SESSIONMANAGER_MODULE_LOGIC_EXPORT vtkSlicerSessionManagerLogic :
   public vtkSlicerModuleLogic
 {
 public:
-  vtkTypeMacro(vtkSlicerSessionDataRecorderLogic,vtkSlicerModuleLogic);
+  vtkTypeMacro(vtkSlicerSessionManagerLogic,vtkSlicerModuleLogic);
 
-  static vtkSlicerSessionDataRecorderLogic *New();
+  static vtkSlicerSessionManagerLogic *New();
 
   void PrintSelf(ostream& os, vtkIndent indent);
 
 protected:
-  vtkSlicerSessionDataRecorderLogic();
-  virtual ~vtkSlicerSessionDataRecorderLogic();
+  vtkSlicerSessionManagerLogic();
+  virtual ~vtkSlicerSessionManagerLogic();
 
   /// Register MRML Node classes to Scene. Gets called automatically when the MRMLScene is attached to this logic class.
   virtual void RegisterNodes();
@@ -74,8 +74,8 @@ public:
   
 private:
 
-  vtkSlicerSessionDataRecorderLogic(const vtkSlicerSessionDataRecorderLogic&); // Not implemented
-  void operator=(const vtkSlicerSessionDataRecorderLogic&);               // Not implemented
+  vtkSlicerSessionManagerLogic(const vtkSlicerSessionManagerLogic&); // Not implemented
+  void operator=(const vtkSlicerSessionManagerLogic&);               // Not implemented
   // Reference to the module MRML node.
 
   double Clock0;

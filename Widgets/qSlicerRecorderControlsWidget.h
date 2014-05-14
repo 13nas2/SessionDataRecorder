@@ -25,7 +25,7 @@
 #include "qSlicerWidget.h"
 
 // FooBar Widgets includes
-#include "qSlicerSessionDataRecorderModuleWidgetsExport.h"
+#include "qSlicerSessionManagerModuleWidgetsExport.h"
 #include "ui_qSlicerRecorderControlsWidget.h"
 
 #include "qSlicerTransformBufferWidget.h"
@@ -33,7 +33,7 @@
 class qSlicerRecorderControlsWidgetPrivate;
 
 /// \ingroup Slicer_QtModules_CreateModels
-class Q_SLICER_MODULE_SESSIONDATARECORDER_WIDGETS_EXPORT 
+class Q_SLICER_MODULE_SESSIONMANAGER_WIDGETS_EXPORT 
 qSlicerRecorderControlsWidget : public qSlicerWidget
 {
   Q_OBJECT

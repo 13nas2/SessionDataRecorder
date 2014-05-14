@@ -92,7 +92,7 @@ void qSlicerMessagesWidget
   Q_D(qSlicerMessagesWidget);
 
   d->setupUi(this);
-  this->setMRMLScene( this->BufferWidget->SessionDataRecorderLogic->GetMRMLScene() );
+  this->setMRMLScene( this->BufferWidget->SessionManagerLogic->GetMRMLScene() );
 
   connect( d->AddMessageButton, SIGNAL( clicked() ), this, SLOT( onAddMessageButtonClicked() ) );
   connect( d->RemoveMessageButton, SIGNAL( clicked() ), this, SLOT( onRemoveMessageButtonClicked() ) ); 

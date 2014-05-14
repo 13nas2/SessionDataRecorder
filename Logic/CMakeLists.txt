@@ -7,7 +7,7 @@ project(vtkSlicer${MODULE_NAME}ModuleLogic)
 set(module_logic_name "${PROJECT_NAME}")
 
 # The header '${module_logic_name}Export.h' will be automatically configured.
-set(module_logic_export_directive "VTK_SLICER_SESSIONDATARECORDER_MODULE_LOGIC_EXPORT")
+set(module_logic_export_directive "VTK_SLICER_SESSIONMANAGER_MODULE_LOGIC_EXPORT")
 
 
 # debug
@@ -23,8 +23,8 @@ set(module_logic_include_directories
 
 # Source files
 set(module_logic_SRCS
-  vtkSlicerSessionDataRecorderLogic.cxx
-  vtkSlicerSessionDataRecorderLogic.h
+  vtkSlicerSessionManagerLogic.cxx
+  vtkSlicerSessionManagerLogic.h
   )
 
 # Additional Target libraries
@@ -32,7 +32,7 @@ set(module_logic_target_libraries
   ${ITK_LIBRARIES}
   ${MRML_LIBRARIES}
   SlicerBaseLogic 
-  vtkSlicerSessionDataRecorderModuleMRML
+  vtkSlicerSessionManagerModuleMRML
   )
 
 

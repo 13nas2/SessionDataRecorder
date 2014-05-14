@@ -18,13 +18,13 @@
 // Qt includes
 #include <QtPlugin>
 
-// SessionDataRecorder Logic includes
-#include <vtkSlicerSessionDataRecorderLogic.h>
+// SessionManager Logic includes
+#include <vtkSlicerSessionManagerLogic.h>
 
-// SessionDataRecorder includes
-#include "qSlicerSessionDataRecorderModule.h"
-#include "qSlicerSessionDataRecorderModuleWidget.h"
-#include "qSlicerSessionDataRecorderIO.h"
+// SessionManager includes
+#include "qSlicerSessionManagerModule.h"
+#include "qSlicerSessionManagerModuleWidget.h"
+#include "qSlicerSessionManagerIO.h"
 
 // Slicer includes
 #include "qSlicerNodeWriter.h"
@@ -32,36 +32,36 @@
 #include "qSlicerCoreApplication.h"
 
 //-----------------------------------------------------------------------------
-Q_EXPORT_PLUGIN2(qSlicerSessionDataRecorderModule, qSlicerSessionDataRecorderModule);
+Q_EXPORT_PLUGIN2(qSlicerSessionManagerModule, qSlicerSessionManagerModule);
 
 //-----------------------------------------------------------------------------
-/// \ingroup Slicer_QtModules_SessionDataRecorder
-class qSlicerSessionDataRecorderModulePrivate
+/// \ingroup Slicer_QtModules_SessionManager
+class qSlicerSessionManagerModulePrivate
 {
 public:
-  qSlicerSessionDataRecorderModulePrivate();
+  qSlicerSessionManagerModulePrivate();
 };
 
 //-----------------------------------------------------------------------------
-// qSlicerSessionDataRecorderModulePrivate methods
+// qSlicerSessionManagerModulePrivate methods
 
 //-----------------------------------------------------------------------------
-qSlicerSessionDataRecorderModulePrivate::qSlicerSessionDataRecorderModulePrivate()
+qSlicerSessionManagerModulePrivate::qSlicerSessionManagerModulePrivate()
 {
 }
 
 //-----------------------------------------------------------------------------
-// qSlicerSessionDataRecorderModule methods
+// qSlicerSessionManagerModule methods
 
 //-----------------------------------------------------------------------------
-qSlicerSessionDataRecorderModule::qSlicerSessionDataRecorderModule(QObject* _parent)
+qSlicerSessionManagerModule::qSlicerSessionManagerModule(QObject* _parent)
   : Superclass(_parent)
-  , d_ptr(new qSlicerSessionDataRecorderModulePrivate)
+  , d_ptr(new qSlicerSessionManagerModulePrivate)
 {
 }
 
 //-----------------------------------------------------------------------------
-QString qSlicerSessionDataRecorderModule::category()const
+QString qSlicerSessionManagerModule::category()const
 {
   // return "Developer Tools";
   return "";
@@ -69,30 +69,30 @@ QString qSlicerSessionDataRecorderModule::category()const
 
 //-----------------------------------------------------------------------------
 
-QStringList qSlicerSessionDataRecorderModule::categories() const
+QStringList qSlicerSessionManagerModule::categories() const
 {
   return QStringList() << "Perk Tutor";
 }
 //-----------------------------------------------------------------------------
-qSlicerSessionDataRecorderModule::~qSlicerSessionDataRecorderModule()
+qSlicerSessionManagerModule::~qSlicerSessionManagerModule()
 {
 }
 
 //-----------------------------------------------------------------------------
-QString qSlicerSessionDataRecorderModule::helpText()const
+QString qSlicerSessionManagerModule::helpText()const
 {
-  return "The purpose of the Session Data Recorder module is to authenticate users and associate a Slicer session with a user.";
+  return "The purpose of the Session Manager module is to authenticate users and associate a Slicer session with a user.";
 }
 
 //-----------------------------------------------------------------------------
-QString qSlicerSessionDataRecorderModule::acknowledgementText()const
+QString qSlicerSessionManagerModule::acknowledgementText()const
 {
   return "This work was was funded by Cancer Care Ontario and the Ontario Consortium for Adaptive Interventions in Radiation Oncology (OCAIRO)";
 }
 
 
 //-----------------------------------------------------------------------------
-QStringList qSlicerSessionDataRecorderModule::contributors()const
+QStringList qSlicerSessionManagerModule::contributors()const
 {
   QStringList moduleContributors;
   moduleContributors << QString("Nisrin Abou-Seido (Queen's University)");
@@ -100,35 +100,35 @@ QStringList qSlicerSessionDataRecorderModule::contributors()const
 }
 
 //-----------------------------------------------------------------------------
-QIcon qSlicerSessionDataRecorderModule::icon()const
+QIcon qSlicerSessionManagerModule::icon()const
 {
-  return QIcon(":/Icons/SessionDataRecorder.png");
+  return QIcon(":/Icons/SessionManager.png");
 }
 
 //-----------------------------------------------------------------------------
-void qSlicerSessionDataRecorderModule::setup()
+void qSlicerSessionManagerModule::setup()
 {
   this->Superclass::setup();
 
   qSlicerCoreApplication* app = qSlicerCoreApplication::application();
-  vtkSlicerSessionDataRecorderLogic* SessionDataRecorderLogic = vtkSlicerSessionDataRecorderLogic::SafeDownCast( this->logic() );
+  vtkSlicerSessionManagerLogic* SessionManagerLogic = vtkSlicerSessionManagerLogic::SafeDownCast( this->logic() );
   
   // Register the IO
-  app->coreIOManager()->registerIO( new qSlicerSessionDataRecorderIO( SessionDataRecorderLogic, this ) );
+  app->coreIOManager()->registerIO( new qSlicerSessionManagerIO( SessionManagerLogic, this ) );
 
  
 }
 
 //-----------------------------------------------------------------------------
-qSlicerAbstractModuleRepresentation * qSlicerSessionDataRecorderModule::createWidgetRepresentation()
+qSlicerAbstractModuleRepresentation * qSlicerSessionManagerModule::createWidgetRepresentation()
 {
-  return new qSlicerSessionDataRecorderModuleWidget;
+  return new qSlicerSessionManagerModuleWidget;
 }
 
 //-----------------------------------------------------------------------------
-vtkMRMLAbstractLogic* qSlicerSessionDataRecorderModule::createLogic()
+vtkMRMLAbstractLogic* qSlicerSessionManagerModule::createLogic()
 {
-  return vtkSlicerSessionDataRecorderLogic::New();
+  return vtkSlicerSessionManagerLogic::New();
 }
 
 
