@@ -122,12 +122,27 @@ void qSlicerSessionManagerModuleWidget::setup()
   connect(d->pushButtonCreateUser, SIGNAL( clicked() ), this, SLOT( onCreateUserButtonClicked() ) ); 
   connect(d->pushButtonLogin, SIGNAL( clicked() ), this, SLOT( onLoginButtonClicked() ) );
   connect(d->saveSceneButton, SIGNAL(clicked()), this, SLOT( onSaveSceneButtonClicked()) );
+  connect(d->pushButtonLogout, SIGNAL(clicked()), this, SLOT( onLogoutButtonClicked()) );
 
   //set up load session tab with 
   
   //hide everything except login fields
   d->groupBox->hide();
   d->groupBoxTraineeData->hide();
+  d->groupBox_loadSession->hide();
+}
+
+void qSlicerSessionManagerModuleWidget::onLogoutButtonClicked()
+{
+	Q_D( qSlicerSessionManagerModuleWidget );
+	d->groupBoxAuthentication->show();
+	d->pushButtonLogin->setEnabled(true);
+
+	 //hide everything except login fields
+	d->groupBox->hide();
+	d->groupBoxTraineeData->hide();
+	d->groupBox_loadSession->hide();
+
 }
 
 void qSlicerSessionManagerModuleWidget::loadSessionSetup()
@@ -170,12 +185,12 @@ void qSlicerSessionManagerModuleWidget
 	{
 		//if database opens successfully, check whether there is a users table.
 		//if not, then create one.
+
 		QStringList tables = database.tables(QSql::Tables);
 		if(!tables.contains("users"))
 		{
 			QSqlQuery query;
 			query.exec("CREATE table users(username varchar(30) primary key, password varchar(30));");
-			QMessageBox::information(0, "Creating Table users	", "Executed create query");
 		}
 
 		//when user enters information and clicks "Create new user"
@@ -260,6 +275,7 @@ void qSlicerSessionManagerModuleWidget
 				d->lineEditUsername->setText("");
 				d->groupBox->show();
 				d->groupBoxTraineeData->show();
+				d->groupBox_loadSession->show();
 			}
 			else
 			{
@@ -296,6 +312,7 @@ void qSlicerSessionManagerModuleWidget
 					}
 					d->groupBox->show();
 					d->groupBoxTraineeData->show();  //only admin can add trainees?
+					d->groupBox_loadSession->show();
 
 				}
 				else
@@ -327,13 +344,11 @@ void qSlicerSessionManagerModuleWidget
 	if(database.open())
 	{
 		//if database opens successfully, check whether there is a students/trainee table.
-		//if not, then create one.
 		QStringList tables = database.tables(QSql::Tables);
 		if(!tables.contains("students"))
 		{
 			QSqlQuery query;
-			query.exec("CREATE table students(id int primary key, firstname varchar(256), lastname varchar(256));");
-			QMessageBox::information(0, "Creating Table students	", "Executed create query");
+			query.exec("CREATE table students(id varchar(32) primary key, firstname varchar(128), lastname varchar(128));");
 		}
 
 		//when user clicks save check that studentID field is not null.
