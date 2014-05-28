@@ -263,10 +263,10 @@ void qSlicerSessionManagerModuleWidget
 				query.exec("CREATE table users(username varchar(30) primary key, password varchar(30));");
 				query.prepare("INSERT INTO users (username, password) " "VALUES (:username, :password)");
 				query.bindValue(":username", "admin");
-				query.bindValue(":password", "default");
+				query.bindValue(":password", "default");  /** TO DO: Password should not be stored as plaintext**/
 				query.exec();
 
-				QMessageBox::information(0, "Login successful", "You are now logged in as admin");
+				d->label_LoggedIn->setText("You are currently logged in as: admin");
 				d->groupBoxAuthentication->setTitle("Admininstration: Create New User Accounts");
 				d->pushButtonLogin->hide();
 				d->pushButtonCreateUser->setEnabled(true);
@@ -297,7 +297,7 @@ void qSlicerSessionManagerModuleWidget
 				{
 					if(d->lineEditUsername->text() == "admin")
 					{
-						QMessageBox::information(0, "Login successful", "You are now logged in as admin");
+						d->label_LoggedIn->setText("You are currently logged in as: admin");
 						d->groupBoxAuthentication->setTitle("Admininstration: Create New User Accounts");
 						d->pushButtonLogin->hide();
 						d->pushButtonCreateUser->setEnabled(true);
@@ -307,7 +307,7 @@ void qSlicerSessionManagerModuleWidget
 					}
 					else
 					{
-						QMessageBox::information(0, "Login successful", "You are now logged in.");
+						d->label_LoggedIn->setText("You are currently logged in as:" + d->lineEditUsername->text());
 						d->groupBoxAuthentication->hide();
 					}
 					d->groupBox->show();
