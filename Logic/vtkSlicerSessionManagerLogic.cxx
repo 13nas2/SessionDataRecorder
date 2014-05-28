@@ -19,79 +19,19 @@
 #include "vtkSlicerSessionManagerLogic.h"
 
 
-// MRML includes
-// #include "vtkMRMLIGTLConnectorNode.h"
-#include "vtkMRMLViewNode.h"
-
-// VTK includes
+#include "vtkMRMLViewNode.h"// VTK includes
 #include <vtkNew.h>
-
-// STD includes
-#include <cassert>
-
 //----------------------------------------------------------------------------
 vtkStandardNewMacro(vtkSlicerSessionManagerLogic);
-
-//----------------------------------------------------------------------------
+////----------------------------------------------------------------------------
 vtkSlicerSessionManagerLogic::vtkSlicerSessionManagerLogic()
 {
 }
-
-//----------------------------------------------------------------------------
+////----------------------------------------------------------------------------
 vtkSlicerSessionManagerLogic::~vtkSlicerSessionManagerLogic()
 {
 }
 
+//logic
 
-
-void vtkSlicerSessionManagerLogic::PrintSelf(ostream& os, vtkIndent indent)
-{
-}
-
-
-
-void vtkSlicerSessionManagerLogic::InitializeEventListeners()
-{
-
-}
-
-
-
-void vtkSlicerSessionManagerLogic::RegisterNodes()
-{
-  if( ! this->GetMRMLScene() )
-  {
-    return;
-  }
-
-}
-
-
-
-void vtkSlicerSessionManagerLogic::UpdateFromMRMLScene()
-{
-  assert(this->GetMRMLScene() != 0);
-}
-
-
-
-void vtkSlicerSessionManagerLogic
-::OnMRMLSceneNodeAdded(vtkMRMLNode* vtkNotUsed(node))
-{
-  assert(this->GetMRMLScene() != 0);
-}
-
-
-void vtkSlicerSessionManagerLogic
-::ProcessMRMLNodesEvents( vtkObject* caller, unsigned long event, void* callData )
-{
-  
-
-}
-
-
-void vtkSlicerSessionManagerLogic
-::OnMRMLSceneNodeRemoved(vtkMRMLNode* vtkNotUsed(node))
-{
-  assert(this->GetMRMLScene() != 0);
-}
+//vtkSlicerSessionManagerLogic::

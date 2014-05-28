@@ -109,7 +109,6 @@ void qSlicerSessionManagerModuleWidget::setup()
   d->setupUi(this);
 
   // If adding widgets, embed widgets here: eg: //d->TransformBufferWidget = qSlicerTransformBufferWidget::New( d->logic() );
-  
   this->Superclass::setup();
 
   // GUI refresh: updates every 10ms
@@ -153,12 +152,7 @@ void qSlicerSessionManagerModuleWidget::loadSessionSetup()
 	//need to open database, check for sessions table, get records with unique user id field.
 	
 
-	//when user actually selects
-
-
-
-	
-
+	//
 }
 
 void qSlicerSessionManagerModuleWidget::enter()
