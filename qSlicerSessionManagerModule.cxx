@@ -81,7 +81,7 @@ qSlicerSessionManagerModule::~qSlicerSessionManagerModule()
 //-----------------------------------------------------------------------------
 QString qSlicerSessionManagerModule::helpText()const
 {
-  return "The purpose of the Session Manager module is to authenticate users and associate a Slicer session with a user.";
+  return "The purpose of the Session Manager module is to allow users to load a Session through authenticationn and associating a Slicer session with a user.";
 }
 
 //-----------------------------------------------------------------------------

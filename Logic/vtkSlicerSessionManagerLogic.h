@@ -25,12 +25,14 @@
 
 // Slicer includes
 #include "vtkSlicerModuleLogic.h"
-#include "vtkMRML.h"
-#include "vtkMRMLNode.h"
 #include "vtkMRMLScene.h"
 #include "vtkObjectFactory.h"
 #include "vtkSmartPointer.h"
 
+//QT include
+#include <QString>
+#include <QtSql>
+#include <QStringList>
 
 #include "vtkSlicerSessionManagerModuleLogicExport.h"
 
@@ -50,15 +52,10 @@ protected:
 
   
 public:
-  /// Initialize listening to MRML events
-  //void InitializeEventListeners();
+  bool createUser(QString databaseName, QString username, QString password);
 
-  //void ProcessMRMLNodesEvents( vtkObject* caller, unsigned long event, void* callData );
-  
 private:
 	//void openDatabase(QString databasename);
-
-	
 
 };
 

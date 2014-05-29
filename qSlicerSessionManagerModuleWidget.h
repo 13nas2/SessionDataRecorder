@@ -29,10 +29,10 @@ public:
   virtual ~qSlicerSessionManagerModuleWidget();
 
   // This widget will keep track if the buffer is changed
-  unsigned long BufferStatus;
+  //unsigned long BufferStatus;
   // These quantities might be repeated by different buffers, so we still need the above
-  unsigned long BufferTransformsStatus;
-  unsigned long BufferMessagesStatus;
+  //unsigned long BufferTransformsStatus;
+  //unsigned long BufferMessagesStatus;
   
 protected:
   QScopedPointer<qSlicerSessionManagerModuleWidgetPrivate> d_ptr;

@@ -60,10 +60,13 @@ public:
 
   vtkSlicerSessionManagerLogic* logic() const;
 
+private:
+	vtkSlicerSessionManagerLogic *SessionManagerLogic;
+
   // Add embedded widgets here
-  qSlicerTransformBufferWidget* TransformBufferWidget;
-  qSlicerRecorderControlsWidget* RecorderControlsWidget;
-  qSlicerMessagesWidget* MessagesWidget;
+  //qSlicerTransformBufferWidget* TransformBufferWidget;
+  //qSlicerRecorderControlsWidget* RecorderControlsWidget;
+  //qSlicerMessagesWidget* MessagesWidget;
 };
 
 //-----------------------------------------------------------------------------
@@ -107,6 +110,8 @@ void qSlicerSessionManagerModuleWidget::setup()
   Q_D(qSlicerSessionManagerModuleWidget);
 
   d->setupUi(this);
+
+  d->SessionManagerLogic = d->logic();
 
   // If adding widgets, embed widgets here: eg: //d->TransformBufferWidget = qSlicerTransformBufferWidget::New( d->logic() );
   this->Superclass::setup();
@@ -171,67 +176,21 @@ void qSlicerSessionManagerModuleWidget
 ::onCreateUserButtonClicked()
 {
 	Q_D( qSlicerSessionManagerModuleWidget );
-
-	//retrieve database
-	QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
-	database.setDatabaseName("PerkTutorSessions.db");
-	if(database.open())
+	
+	bool createdNew;
+	createdNew = d->SessionManagerLogic->createUser("PerkTutorSessions.db", d->lineEditUsername->text(), d->lineEditPassword->text());	
+	if(createdNew == true) //successfully created user
 	{
-		//if database opens successfully, check whether there is a users table.
-		//if not, then create one.
-
-		QStringList tables = database.tables(QSql::Tables);
-		if(!tables.contains("users"))
-		{
-			QSqlQuery query;
-			query.exec("CREATE table users(username varchar(30) primary key, password varchar(30));");
-		}
-
-		//when user enters information and clicks "Create new user"
-		//check that the lineEdit fields are not null
-		if(( d->lineEditUsername->text() != "") && (d->lineEditPassword->text() != ""))
-		{
-			//check that user does not already exist in the database
-			QSqlQuery checkUserQuery(database);
-			checkUserQuery.prepare("Select * from users where username = ?");
-			checkUserQuery.bindValue(0, d->lineEditUsername->text());
-			checkUserQuery.exec();
-
-			if(checkUserQuery.next()) //found the user  /*//MAYBE: ask the user to enter the password again to login?...*/
-			{
-				QMessageBox::information(0, "Cannot create user", "Cannot create new user: This user already exists");
-				d->lineEditUsername->setText("");
-				d->lineEditPassword->setText("");
-				d->lineEditUsername->setFocus();
-				
-			}
-			else
-			{
-				//add username and password to table
-				QSqlQuery query;
-				query.prepare("INSERT INTO users (username, password) " "VALUES (:username, :password)");
-				query.bindValue(":username", d->lineEditUsername->text());
-				query.bindValue(":password", d->lineEditPassword->text());
-				query.exec();
-
-				QString s = "You have created new user:  ";
-				s = s.append( d->lineEditUsername->text());
-				QMessageBox::information(0, "Created User", s);
-					
-				// after user created, clear username and password fields to allow user to login
-				d->lineEditUsername->setText("");
-				d->lineEditPassword->setText("");
-			}
-		}
+		//clear user entry fields
+		d->lineEditUsername->setText("");
+		d->lineEditPassword->setText("");
+		d->lineEditUsername->setFocus();
 	}
-	else{
-		QMessageBox::critical(0, QObject::tr("Database Error"),database.lastError().text());
+	else //user already exists /*//MAYBE: ask the user to enter the password again to login?...*/
+	{
+		QMessageBox::information(0, "Cannot create user", "Error: This username already exists in this database.");
 	}
-	database.close();
 }
-
-
-
 
 void qSlicerSessionManagerModuleWidget
 ::onLoginButtonClicked()
