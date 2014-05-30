@@ -69,3 +69,52 @@ bool vtkSlicerSessionManagerLogic::createUser(QString databaseName, QString user
 	database.close();
 	return false;
 }
+
+/*
+Return: name of logged in user, or empty string if login failed.
+*/
+QString vtkSlicerSessionManagerLogic::LoginUser(QString databaseName, QString username, QString password)
+{
+	QString user = "";
+	
+	//retrieve database
+	QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
+	database.setDatabaseName("PerkTutorSessions.db");
+	if(database.open())
+	{
+		//if database opens successfully, check whether there is a users table. If not, create one.
+		QStringList tables = database.tables(QSql::Tables);
+		if(!tables.contains("users"))
+		{
+			//create users table and add admin user
+			QSqlQuery query;
+			query.exec("CREATE table users(username varchar(30) primary key, password varchar(30));");
+			query.prepare("INSERT INTO users (username, password) " "VALUES (:username, :password)");
+			query.bindValue(":username", "admin");
+			query.bindValue(":password", "default");  /** TO DO: Password should not be stored as plaintext**/
+			query.exec();
+		}
+		else
+		{
+			if(( username != "") && (password != ""))
+			{
+				//check if user/password combination exists in the database
+				QSqlQuery checkUserQuery(database);
+				checkUserQuery.prepare("Select * from users where username = ? and password = ?");
+				checkUserQuery.bindValue(0, username);
+				checkUserQuery.bindValue(1, password);
+				checkUserQuery.exec();
+
+				if(checkUserQuery.next())//found username/password pair.
+				{
+					user = username;
+				}
+			}
+		}
+	}
+	else{
+		//QMessageBox::critical(0, QObject::tr("Database Error"),database.lastError().text());
+	}
+	database.close();
+	return user;
+}

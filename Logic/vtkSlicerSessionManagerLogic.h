@@ -53,6 +53,7 @@ protected:
   
 public:
   bool createUser(QString databaseName, QString username, QString password);
+  QString LoginUser(QString databaseName, QString username, QString password);
 
 private:
 	//void openDatabase(QString databasename);

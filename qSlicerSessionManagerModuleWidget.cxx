@@ -192,95 +192,36 @@ void qSlicerSessionManagerModuleWidget
 	}
 }
 
+/* 
+Purpose: Triggered when user clicks Login. Calls a function to check if user/password combination exists in the database.
+*/
 void qSlicerSessionManagerModuleWidget
 ::onLoginButtonClicked()
 {
-	/*user enters login information and clicks "login". Check that the lineEdit fields are not empty
-	  if user/password pair exists in the database, user is now logged in - display a message either way.
-    */
 	Q_D( qSlicerSessionManagerModuleWidget );
 
-	//retrieve database
-	QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
-	database.setDatabaseName("PerkTutorSessions.db");
-	if(database.open())
+	QString user = d->SessionManagerLogic->LoginUser("PerkTutorSessions.db", d->lineEditUsername->text(), d->lineEditPassword->text());
+	d->lineEditPassword->setText("");
+	d->lineEditUsername->setText("");
+		
+	if( user != "")
 	{
-		//if database opens successfully, check whether there is a users table. If not, create one.
-		QStringList tables = database.tables(QSql::Tables);
-		if(!tables.contains("users"))
+		d->pushButtonLogin->hide();
+		d->groupBox->show();
+		d->groupBoxTraineeData->show();
+		d->groupBox_loadSession->show();
+		d->label_LoggedIn->setText("You are currently logged in as: " + user);	
+		if( user == "admin")
 		{
-			if((d->lineEditUsername->text() == "admin") && ( d->lineEditPassword->text() == "default"))
-			{
-				//create users table and add admin user
-				QSqlQuery query;
-				query.exec("CREATE table users(username varchar(30) primary key, password varchar(30));");
-				query.prepare("INSERT INTO users (username, password) " "VALUES (:username, :password)");
-				query.bindValue(":username", "admin");
-				query.bindValue(":password", "default");  /** TO DO: Password should not be stored as plaintext**/
-				query.exec();
-
-				d->label_LoggedIn->setText("You are currently logged in as: admin");
-				d->groupBoxAuthentication->setTitle("Admininstration: Create New User Accounts");
-				d->pushButtonLogin->hide();
-				d->pushButtonCreateUser->setEnabled(true);
-				d->pushButtonCreateUser->setAutoDefault(true);
-				d->lineEditPassword->setText("");
-				d->lineEditUsername->setText("");
-				d->groupBox->show();
-				d->groupBoxTraineeData->show();
-				d->groupBox_loadSession->show();
-			}
-			else
-			{
-				QMessageBox::information(0, "Error", "User does not exist or the password is incorrect. Log in as admin to create new user account.");
-			}
-		}
-		else
-		{
-			if(( d->lineEditUsername->text() != "") && (d->lineEditPassword->text() != ""))
-			{
-				//check that user does not already exist in the database
-				QSqlQuery checkUserQuery(database);
-				checkUserQuery.prepare("Select * from users where username = ? and password = ?");
-				checkUserQuery.bindValue(0, d->lineEditUsername->text());
-				checkUserQuery.bindValue(1, d->lineEditPassword->text());
-				checkUserQuery.exec();
-
-				if(checkUserQuery.next())//found username/password pair.
-				{
-					if(d->lineEditUsername->text() == "admin")
-					{
-						d->label_LoggedIn->setText("You are currently logged in as: admin");
-						d->groupBoxAuthentication->setTitle("Admininstration: Create New User Accounts");
-						d->pushButtonLogin->hide();
-						d->pushButtonCreateUser->setEnabled(true);
-						d->pushButtonCreateUser->setShortcut(Qt::Key_Return);
-						d->lineEditPassword->setText("");
-						d->lineEditUsername->setText("");
-					}
-					else
-					{
-						d->label_LoggedIn->setText("You are currently logged in as:" + d->lineEditUsername->text());
-						d->groupBoxAuthentication->hide();
-					}
-					d->groupBox->show();
-					d->groupBoxTraineeData->show();  //only admin can add trainees?
-					d->groupBox_loadSession->show();
-
-				}
-				else
-				{
-					QMessageBox::information(0, "Login failed", "Either the username or password is incorrect.");
-					d->lineEditUsername->setText("");
-					d->lineEditPassword->setText("");
-				}
-			}
+			d->pushButtonCreateUser->setEnabled(true);
+			d->pushButtonCreateUser->setAutoDefault(true);
+			d->groupBoxAuthentication->setTitle("Administration: Create New User Accounts");
 		}
 	}
-	else{
-		QMessageBox::critical(0, QObject::tr("Database Error"),database.lastError().text());
+	else
+	{
+		QMessageBox::information(0, "Error", "User does not exist or the password is incorrect. Log in as admin to create new user account.");
 	}
-	database.close();
 }
 
 
