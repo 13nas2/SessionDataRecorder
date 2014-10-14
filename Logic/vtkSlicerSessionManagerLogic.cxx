@@ -33,6 +33,50 @@ vtkSlicerSessionManagerLogic::~vtkSlicerSessionManagerLogic()
 
 //logic
 
+/*
+Input: QString filepath (location of the CSV file)
+Output: QStringList with the the students information ( to be added to the user interface)
+*/
+QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath)
+{
+	//read file and save usernames in a QStringList
+
+	ifstream inputFile;
+
+	inputFile.clear();
+	inputFile.open(filepath.toStdString().c_str(), ios::in);
+
+	//exit and prompt error message if file could not be opened
+	if (!inputFile){
+		qDebug() << "File list could not be opened" << endl;
+		//d->label_output->setText("File list could not be opened");
+	}// end if
+
+	// count number of lines in the data file
+	int number_of_students = 0;
+
+	//first line is the "headers": NetId, First Name, Surname, Student Number, "Assignment:..." 
+	std::string header;
+	getline(inputFile, header);
+
+	//std::vector<std::string> students;
+	QStringList studentlist;
+	std::string studentline;
+
+	while (getline(inputFile,studentline))  //read through the file and add students to QStringList
+	{
+		number_of_students++;
+		//students.push_back(studentline);
+		studentlist << QString(studentline.c_str());
+	}
+
+	inputFile.close();
+
+	//return QStringList
+	return studentlist;
+}
+
+
 bool vtkSlicerSessionManagerLogic::createUser(QString databaseName, QString username, QString password)
 {
 	//retrieve database

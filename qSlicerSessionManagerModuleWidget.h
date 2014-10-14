@@ -50,6 +50,8 @@ protected slots:
   void onLoginButtonClicked();
   void onSaveSceneButtonClicked();
   void onLogoutButtonClicked();
+  void onBrowseButtonClicked();
+  void onOKLoadButtonClicked();
 
 
 private:

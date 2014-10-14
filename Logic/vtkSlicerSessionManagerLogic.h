@@ -54,6 +54,7 @@ protected:
 public:
   bool createUser(QString databaseName, QString username, QString password);
   QString LoginUser(QString databaseName, QString username, QString password);
+  QStringList getTraineeInformation(QString filepath);
 
 private:
 	//void openDatabase(QString databasename);
