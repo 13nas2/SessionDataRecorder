@@ -36,6 +36,8 @@
 
 #include "vtkSlicerSessionManagerModuleLogicExport.h"
 
+
+
 /// \ingroup Slicer_QtModules_SessionManager
 class VTK_SLICER_SESSIONMANAGER_MODULE_LOGIC_EXPORT vtkSlicerSessionManagerLogic :
   public vtkSlicerModuleLogic
@@ -52,12 +54,19 @@ protected:
 
   
 public:
+
+  //getter function
+  QStringList getFilenames();
+
+  //logic functions
   bool createUser(QString databaseName, QString username, QString password);
   QString LoginUser(QString databaseName, QString username, QString password);
-  QStringList getTraineeInformation(QString filepath);
+  QStringList getTraineeInformation(QString filepath, QString studyname);
+  QString getStudyNameAndMakeDirectory(QString filepath);
 
 private:
 	//void openDatabase(QString databasename);
+    QStringList filenames; //list of study filenames
 
 };
 

@@ -20,6 +20,12 @@
 
 #include "vtkMRMLViewNode.h"// VTK includes
 #include <vtkNew.h>
+
+//create directoires include
+#include<direct.h> //only works on Windows
+//iso c++ includes
+#include <string>
+
 //----------------------------------------------------------------------------
 vtkStandardNewMacro(vtkSlicerSessionManagerLogic);
 ////----------------------------------------------------------------------------
@@ -31,16 +37,50 @@ vtkSlicerSessionManagerLogic::~vtkSlicerSessionManagerLogic()
 {
 }
 
+
+//get/set methods
+
+QStringList vtkSlicerSessionManagerLogic::getFilenames()
+{
+  return filenames;
+}
+
 //logic
 
 /*
 Input: QString filepath (location of the CSV file)
 Output: QStringList with the the students information ( to be added to the user interface)
 */
-QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath)
+QString vtkSlicerSessionManagerLogic::getStudyNameAndMakeDirectory(QString filepath)
+{
+   QFile file(filepath); // filepath contains full file path name
+   QString filename;
+    if (file.exists())
+    {
+      QFileInfo fileInfo(file);
+      filename = fileInfo.fileName(); // Return only a file name
+      filename.truncate(filename.indexOf("Grades"));
+      filenames << filename;  //add CSV filename to list of filenames
+
+      //make directory for filename
+      std::string path = QDir::homePath().toStdString() + "/Study-" + filename.toStdString();
+      int result = _mkdir(path.c_str());
+      if( result == 0)
+        printf("Directory %s created",path.c_str());
+      else
+        printf("Study directory could not be created");
+
+    }
+    return filename;
+}
+
+/*
+Input: QString filepath (location of the CSV file)
+Output: QStringList with the the students information ( to be added to the user interface)
+*/
+QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath, QString studyname)
 {
 	//read file and save usernames in a QStringList
-
 	ifstream inputFile;
 
 	inputFile.clear();
@@ -48,8 +88,8 @@ QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath
 
 	//exit and prompt error message if file could not be opened
 	if (!inputFile){
-		qDebug() << "File list could not be opened" << endl;
-		//d->label_output->setText("File list could not be opened");
+		qDebug() << "File could not be opened" << endl;
+		//d->label_output->setText("File could not be opened");
 	}// end if
 
 	// count number of lines in the data file
@@ -57,22 +97,32 @@ QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath
 
 	//first line is the "headers": NetId, First Name, Surname, Student Number, "Assignment:..." 
 	std::string header;
-	getline(inputFile, header);
+	getline(inputFile, header); // gets the header line
 
-	//std::vector<std::string> students;
 	QStringList studentlist;
 	std::string studentline;
 
+    //get study path
+    std::string studypath = QDir::homePath().toStdString() + "/Study-" + studyname.toStdString();
+
 	while (getline(inputFile,studentline))  //read through the file and add students to QStringList
 	{
-		number_of_students++;
-		//students.push_back(studentline);
-		studentlist << QString(studentline.c_str());
+        //make directory for student using student id
+        std::string sub = studentline.substr(0,studentline.find_first_of(','));
+        std::string path = studypath + "//" + sub;
+        _mkdir(path.c_str());
+
+        number_of_students++;
+		studentlist << QString(studentline.c_str()); 
 	}
+
+    //loop through the trainees to create one subdirectory each.
+    //create a directory
+    //std::string newpath = 
+    //CreateDirectory(
 
 	inputFile.close();
 
-	//return QStringList
 	return studentlist;
 }
 

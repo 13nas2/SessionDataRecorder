@@ -158,8 +158,6 @@ void qSlicerSessionManagerModuleWidget::loadSessionSetup()//may be unnecessary
   //populate the combo box with student ids in the database
   //need to open database, check for sessions table, get records with unique user id field.
 
-
-  //
 }
 
 void qSlicerSessionManagerModuleWidget::enter()
@@ -183,13 +181,15 @@ void qSlicerSessionManagerModuleWidget
   //bool createdDirectoryStructure = d->SessionManagerLogic->createDirectoryStructure("PerkTutorSessions.db", filepath);
 
   d->lineEdit_filename->clear();
-
   d->label_output->setText(filepath);
 
-  QStringList studentlist = d->SessionManagerLogic->getTraineeInformation(filepath);
+  QString studyname = d->SessionManagerLogic->getStudyNameAndMakeDirectory(filepath);
+  d->ComboBoxStudyNames->addItems(d->SessionManagerLogic->getFilenames());
+  d->ComboBoxStudyNames->setEnabled(true);
+  //QMessageBox::information(0, "Created/Updated Study Directory:\n", filepath + "/Study-" + studyname);
 
-  d->label_output->setText("Number of students" + QString::number(studentlist.size()));
-
+  QStringList studentlist = d->SessionManagerLogic->getTraineeInformation(filepath, studyname);
+  //d->label_output->setText("Number of students" + QString::number(studentlist.size()));
   d->ComboBoxTrainees->addItems(studentlist);
   d->ComboBoxTrainees->setEnabled(true);
 }
