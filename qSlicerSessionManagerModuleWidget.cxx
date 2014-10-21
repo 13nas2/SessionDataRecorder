@@ -186,7 +186,7 @@ void qSlicerSessionManagerModuleWidget
   QString studyname = d->SessionManagerLogic->getStudyNameAndMakeDirectory(filepath);
   d->ComboBoxStudyNames->addItems(d->SessionManagerLogic->getFilenames());
   d->ComboBoxStudyNames->setEnabled(true);
-  //QMessageBox::information(0, "Created/Updated Study Directory:\n", filepath + "/Study-" + studyname);
+  QMessageBox::information(0, "Created/Updated Study Directory:\n", QDir::homePath() + "/Study-" + studyname);
 
   QStringList studentlist = d->SessionManagerLogic->getTraineeInformation(filepath, studyname);
   //d->label_output->setText("Number of students" + QString::number(studentlist.size()));
