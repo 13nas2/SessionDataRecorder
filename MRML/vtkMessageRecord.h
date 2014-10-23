@@ -28,7 +28,7 @@
 #include "vtkObjectFactory.h"
 #include "vtkXMLDataElement.h"
 
-// SessionManager includes
+// SessionManager includes 
 #include "vtkSlicerSessionManagerModuleMRMLExport.h"
 
 
