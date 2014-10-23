@@ -33,7 +33,7 @@ protected:
   vtkMRMLTrainingSessionNode();
   virtual ~vtkMRMLTrainingSessionNode();
   vtkMRMLTrainingSessionNode ( const vtkMRMLTrainingSessionNode& );
-  //void operator=( const vtkMRMLFiducialRegistrationWizardNode& );
+  void operator=( const vtkMRMLTrainingSessionNode& );
 };
 
 #endif

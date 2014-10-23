@@ -24,10 +24,10 @@ set(module_mrml_include_directories
 
 # Source files
 set(module_mrml_SRCS
-  vtkTransformRecord.cxx
-  vtkTransformRecord.h
   vtkMessageRecord.cxx
   vtkMessageRecord.h
+  vtkMRMLTrainingSessionNode.cpp
+  vtkMRMLTrainingSessionNode.h		
   )
 
 # Additional Target libraries

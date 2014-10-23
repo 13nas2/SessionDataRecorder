@@ -43,3 +43,26 @@ vtkMRMLNode* vtkMRMLTrainingSessionNode
   return new vtkMRMLTrainingSessionNode;
 }
 
+void vtkMRMLTrainingSessionNode
+::PrintSelf( ostream& os, vtkIndent indent )
+{
+  vtkMRMLNode::PrintSelf(os,indent); // This will take care of referenced nodes
+
+  os << indent << "NODE NAME: " << this->GetName() << std::endl;
+}
+
+void vtkMRMLTrainingSessionNode
+::ReadXMLAttributes( const char** atts )
+{
+}
+
+void vtkMRMLTrainingSessionNode
+::WriteXML( ostream& of, int indent )
+{
+}
+
+void vtkMRMLTrainingSessionNode
+::Copy( vtkMRMLNode *node )
+{
+}
+
