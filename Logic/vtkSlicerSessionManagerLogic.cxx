@@ -26,6 +26,10 @@
 //iso c++ includes
 #include <string>
 
+#include "qSlicerIO.h"
+#include "qSlicerIOManager.h"
+#include "qSlicerApplication.h"
+
 //----------------------------------------------------------------------------
 vtkStandardNewMacro(vtkSlicerSessionManagerLogic);
 ////----------------------------------------------------------------------------
@@ -45,8 +49,36 @@ QStringList vtkSlicerSessionManagerLogic::getFilenames()
   return filenames;
 }
 
-//logic
+void vtkSlicerSessionManagerLogic::setSessionNode(QString traineeID, QString studyname, int assignmentid)
+{
+  //session node should be initialized elsewhere ( maybe in logic constructor)
 
+}
+
+QString vtkSlicerSessionManagerLogic
+::saveSession(QString studyname, QString traineeID, int assignmentid)
+{
+  //create mrml node, register and add to scene
+  vtkMRMLTrainingSessionNode* sessionNode = vtkMRMLTrainingSessionNode::New();
+  this->GetMRMLScene()->RegisterNodeClass( sessionNode );
+  this->GetMRMLScene()->AddNode(sessionNode);
+  sessionNode->Delete();
+
+  printf(this->GetMRMLScene()->GetSceneXMLString().c_str());
+
+  /*TO DO: Note: Directory structure created elsewhere. Write a "getPath" method so that the following format is not hardcoded in several places*/
+  QString home = QDir::toNativeSeparators(QDir::homePath());
+  QString path = home + "\\Study-" + studyname + "\\" + traineeID.split(',').first() + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-hh-mm-ss'") + ".mrb";
+
+  //save scene and mrml node
+  qSlicerIO::IOProperties properties_map;
+  properties_map["fileName"] = path;
+  qSlicerApplication::application()->ioManager()->saveNodes("SceneFile",properties_map);  //this should save the sessionNode as well since it was added to the scene
+
+  return path;
+}
+
+//logic
 /*
 Input: QString filepath (location of the CSV file)
 Output: QStringList with the the students information ( to be added to the user interface)
@@ -55,7 +87,7 @@ QString vtkSlicerSessionManagerLogic::getStudyNameAndMakeDirectory(QString filep
 {
    QFile file(filepath); // filepath contains full file path name
    QString filename;
-    if (file.exists())
+   if (file.exists())
     {
       QFileInfo fileInfo(file);
       filename = fileInfo.fileName(); // Return only a file name
@@ -68,7 +100,7 @@ QString vtkSlicerSessionManagerLogic::getStudyNameAndMakeDirectory(QString filep
       if( result == 0)
         printf("Directory %s created",path.c_str());
       else
-        printf("Study directory could not be created");
+        printf("Study directory already exists or could not be created");
 
     }
     return filename;
@@ -76,7 +108,7 @@ QString vtkSlicerSessionManagerLogic::getStudyNameAndMakeDirectory(QString filep
 
 /*
 Input: QString filepath (location of the CSV file)
-Output: QStringList with the the students information ( to be added to the user interface)
+Output: QStringList with the the trainees' information ( to be added to the UI). Also, a subdirectory is created for each trainee.
 */
 QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath, QString studyname)
 {
@@ -92,7 +124,7 @@ QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath
 		//d->label_output->setText("File could not be opened");
 	}// end if
 
-	// count number of lines in the data file
+	//count number of lines in the data file
 	int number_of_students = 0;
 
 	//first line is the "headers": NetId, First Name, Surname, Student Number, "Assignment:..." 
@@ -112,20 +144,18 @@ QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath
         std::string path = studypath + "//" + sub;
         _mkdir(path.c_str());
 
+        //split string using the commas
+        // 1st element: student id , 2nd element: first name, 3rd element: last name
+
+        QString line(studentline.c_str());
+        QStringList studentdata = line.split(",");
+
         number_of_students++;
-		studentlist << QString(studentline.c_str()); 
+        studentlist << QString(studentdata.at(0) + ", " + studentdata.at(1) + " " + studentdata.at(2)); 
 	}
-
-    //loop through the trainees to create one subdirectory each.
-    //create a directory
-    //std::string newpath = 
-    //CreateDirectory(
-
 	inputFile.close();
-
 	return studentlist;
 }
-
 
 bool vtkSlicerSessionManagerLogic::createUser(QString databaseName, QString username, QString password)
 {

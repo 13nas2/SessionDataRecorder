@@ -28,6 +28,22 @@ public:
   virtual void WriteXML( ostream& of, int indent );
   virtual void Copy( vtkMRMLNode *node );
 
+  virtual void 	SetSingletonTag (const char *c);
+
+  //TrainingSession Get/Set Methods
+  void setTraineeID(std::string trainee);
+  void setStudyName(std::string study);
+  void setAssignmentID(int assignmentid);
+
+  std::string getTraineeID();
+  std::string getStudyName();
+  int getAssignmentID();
+ 
+private:
+  std::string trainee_id;
+  std::string study_name;
+  int assignment_id;
+
 protected:
   // Constructor/ destructor methods
   vtkMRMLTrainingSessionNode();

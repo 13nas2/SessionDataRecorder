@@ -34,9 +34,9 @@
 #include <QtSql>
 #include <QStringList>
 
+#include "vtkMRMLTrainingSessionNode.h"
+
 #include "vtkSlicerSessionManagerModuleLogicExport.h"
-
-
 
 /// \ingroup Slicer_QtModules_SessionManager
 class VTK_SLICER_SESSIONMANAGER_MODULE_LOGIC_EXPORT vtkSlicerSessionManagerLogic :
@@ -64,10 +64,15 @@ public:
   QStringList getTraineeInformation(QString filepath, QString studyname);
   QString getStudyNameAndMakeDirectory(QString filepath);
 
+  //other functions
+  void setSessionNode(QString traineeID, QString studyname, int assignmentid);
+  
+  QString saveSession(QString traineeID, QString studyname, int assignmentid);
+
 private:
 	//void openDatabase(QString databasename);
     QStringList filenames; //list of study filenames
-
+    
 };
 
 #endif

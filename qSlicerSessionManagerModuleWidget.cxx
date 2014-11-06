@@ -22,9 +22,6 @@ limitations under the License.
 // SlicerQt includes
 #include "qSlicerSessionManagerModuleWidget.h"
 #include "ui_qSlicerSessionManagerModule.h"
-#include "qSlicerIO.h"
-#include "qSlicerIOManager.h"
-#include "qSlicerApplication.h"
 #include <QtGui>
 
 #include <QtDebug>
@@ -35,8 +32,8 @@ limitations under the License.
 #include "vtkSlicerSessionManagerLogic.h"
 #include "vtkMRMLLinearTransformNode.h"
 
-#include "qMRMLNodeComboBox.h"
-#include "vtkMRMLViewNode.h"
+//#include "qMRMLNodeComboBox.h"
+//#include "vtkMRMLViewNode.h"
 #include "vtkSlicerSessionManagerLogic.h"
 
 //#include <sqlite3.h>
@@ -64,8 +61,6 @@ private:
 	vtkSlicerSessionManagerLogic *SessionManagerLogic;
 
   // Add embedded widgets here
-  //qSlicerTransformBufferWidget* TransformBufferWidget;
-  //qSlicerRecorderControlsWidget* RecorderControlsWidget;
   //qSlicerMessagesWidget* MessagesWidget;
 };
 
@@ -81,7 +76,6 @@ qSlicerSessionManagerModuleWidgetPrivate::qSlicerSessionManagerModuleWidgetPriva
 qSlicerSessionManagerModuleWidgetPrivate::~qSlicerSessionManagerModuleWidgetPrivate()
 {
 }
-
 
 vtkSlicerSessionManagerLogic* qSlicerSessionManagerModuleWidgetPrivate::logic() const
 {
@@ -124,18 +118,27 @@ void qSlicerSessionManagerModuleWidget::setup()
   //connect buttons
   connect(d->pushButtonCreateTrainee, SIGNAL( clicked() ), this, SLOT( onCreateTraineeButtonClicked() ) );
   connect(d->pushButtonCreateUser, SIGNAL( clicked() ), this, SLOT( onCreateUserButtonClicked() ) );
+
   connect(d->pushButtonLogin, SIGNAL( clicked() ), this, SLOT( onLoginButtonClicked() ) );
-  connect(d->saveSceneButton, SIGNAL(clicked()), this, SLOT( onSaveSceneButtonClicked()) );
   connect(d->pushButtonLogout, SIGNAL(clicked()), this, SLOT( onLogoutButtonClicked()) );
+
+  //connect(d->saveSceneButton, SIGNAL(clicked()), this, SLOT( onSaveSceneButtonClicked()) );
+  
   connect(d->pushButtonBrowse, SIGNAL(clicked()), this, SLOT( onBrowseButtonClicked()) );
   connect(d->pushButtonOKLoad, SIGNAL(clicked()), this, SLOT( onOKLoadButtonClicked()) );
-
+  connect(d->pushButtonSaveSessionData, SIGNAL(clicked()), this, SLOT( onSaveSceneButtonClicked()) );
   //set up load session tab with
 
   //hide everything except login fields
-  d->groupBox->hide();
-  d->groupBoxTraineeData->hide();
-  d->groupBox_loadSession->hide();
+ // d->groupBox->hide();
+ // d->groupBoxTraineeData->hide();
+  //d->groupBox_loadSession->hide();
+
+  //show groupBoxes
+  d->groupBox->show();
+  d->groupBoxTraineeData->show();
+  d->groupBox_loadSession->show();
+
 }
 
 void qSlicerSessionManagerModuleWidget::onLogoutButtonClicked()
@@ -145,9 +148,9 @@ void qSlicerSessionManagerModuleWidget::onLogoutButtonClicked()
   d->pushButtonLogin->setEnabled(true);
 
   //hide everything except login fields
-  d->groupBox->hide();
-  d->groupBoxTraineeData->hide();
-  d->groupBox_loadSession->hide();
+  //d->groupBox->hide();
+  //d->groupBoxTraineeData->hide();
+ // d->groupBox_loadSession->hide();
 
 }
 
@@ -157,6 +160,8 @@ void qSlicerSessionManagerModuleWidget::loadSessionSetup()//may be unnecessary
 
   //populate the combo box with student ids in the database
   //need to open database, check for sessions table, get records with unique user id field.
+
+  
 
 }
 
@@ -316,52 +321,13 @@ void qSlicerSessionManagerModuleWidget
 ::onSaveSceneButtonClicked()
 {
   Q_D( qSlicerSessionManagerModuleWidget );
-  //save scene ( pass in filename and properties array)
-  qSlicerIO::IOProperties properties_map;
-  //QString filename = "Scene-test.mrb";
 
-  // Get absolute filename
-  QFileInfo sceneFileInfo = QFileInfo( QDir(qSlicerApplication::application()->mrmlScene()->GetRootDirectory()),
-    QDate::currentDate().toString("yyyy-MM-dd") + "-Scene.mrb");
-
-  QString filename = QDateTime::currentDateTime().date().toString("'/'yyyy-MM-dd'");
-  if(d->lineEditStudentID->text().toStdString() != "")
-  {
-    filename.append("-Session-Student");
-    filename.append(d->lineEditStudentID->text());
-    filename.append(".mrb");
-  }
-  else
-  {
-    filename.append("-Session.mrb");
-  }
-
-  filename.prepend(qSlicerApplication::application()->mrmlScene()->GetRootDirectory());
-  properties_map["fileName"] = filename;
-  qSlicerApplication::application()->ioManager()->saveNodes("SceneFile",properties_map);
-  QMessageBox::information(0, "Saved scene to ", filename);
-
-  //create training session "sessions" table with fields "user_id", "datetime", "filepath" [ADD "associated_study" field?)
-  //retrieve database
-  QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE");
-  database.setDatabaseName("PerkTutorSessions.db");
-  if(database.open())
-  {
-    QStringList tables = database.tables(QSql::Tables);
-    if(!tables.contains("sessions"))
-    {
-      QSqlQuery query;
-      query.exec("CREATE table sessions(sessionID integer primary key autoincrement, userID varchar[32], studyname varchar[256], timestamp datetime default current_timestamp, filepath varchar(256));");
-      QMessageBox::information(0, "Created new 'sessions' table ","Created new 'sessions' table ");
-    }
-
-    //add data to table
-    QSqlQuery query;
-    query.prepare("INSERT INTO sessions(userID, filepath) " "VALUES (:userID, :filepath)");
-    query.bindValue(":userID", d->lineEditStudentID->text());
-    query.bindValue(":filepath", filename);
-    query.exec();
-  }
-  //vtkMRMLScene* scene = qSlicerApplication::mrmlScene(); /* illegal call of non-static member function*/
-  //qSlicerApplication::application()->ioManager()->openSaveDataDialog(); /* opens up save dialog */
+  QString studyname = d->ComboBoxStudyNames->currentText();
+  QString traineename = d->ComboBoxTrainees->currentText();
+  int assignid = 0;
+  if(d->ComboBoxAssignments->currentText() != "")
+    assignid = d->ComboBoxAssignments->currentText().toInt();
+  
+  QString saved = d->SessionManagerLogic->saveSession(studyname, traineename, assignid);
+  QMessageBox::information(0, "Saved scene to ", saved);
 }
