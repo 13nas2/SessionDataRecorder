@@ -18,13 +18,8 @@
 // SessionManager includes
 #include "vtkSlicerSessionManagerLogic.h"
 
-#include "vtkMRMLViewNode.h"// VTK includes
-#include <vtkNew.h>
-
-//create directoires include
+//include for creating directories
 #include<direct.h> //only works on Windows
-//iso c++ includes
-#include <string>
 
 #include "qSlicerIO.h"
 #include "qSlicerIOManager.h"
@@ -68,7 +63,16 @@ QString vtkSlicerSessionManagerLogic
 
   /*TO DO: Note: Directory structure created elsewhere. Write a "getPath" method so that the following format is not hardcoded in several places*/
   QString home = QDir::toNativeSeparators(QDir::homePath());
-  QString path = home + "\\Study-" + studyname + "\\" + traineeID.split(',').first() + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-hh-mm-ss'") + ".mrb";
+  QString path = home + "\\Study-" + studyname + "\\" + traineeID.split(',').first();
+
+  //get the number of sessions in the given student's directory
+  QDir dir(path);
+  dir.setFilter(QDir::Files | QDir::NoSymLinks);
+  QFileInfoList list = dir.entryInfoList();
+  
+  int filenum = list.size() + 1;
+
+  path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-Session'") + QString::number(filenum) + ".mrb";
 
   //save scene and mrml node
   qSlicerIO::IOProperties properties_map;

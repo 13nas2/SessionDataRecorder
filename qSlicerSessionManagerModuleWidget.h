@@ -49,7 +49,7 @@ protected slots:
   void onCreateUserButtonClicked();
   void onLoginButtonClicked();
   void onSaveSceneButtonClicked();
-  void onLogoutButtonClicked();
+  //void onLogoutButtonClicked();
   void onBrowseButtonClicked();
   void onOKLoadButtonClicked();
 

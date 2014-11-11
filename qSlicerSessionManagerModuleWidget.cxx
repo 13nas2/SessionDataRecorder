@@ -120,7 +120,8 @@ void qSlicerSessionManagerModuleWidget::setup()
   connect(d->pushButtonCreateUser, SIGNAL( clicked() ), this, SLOT( onCreateUserButtonClicked() ) );
 
   connect(d->pushButtonLogin, SIGNAL( clicked() ), this, SLOT( onLoginButtonClicked() ) );
-  connect(d->pushButtonLogout, SIGNAL(clicked()), this, SLOT( onLogoutButtonClicked()) );
+ 
+  //connect(d->pushButtonLogout, SIGNAL(clicked()), this, SLOT( onLogoutButtonClicked()) );
 
   //connect(d->saveSceneButton, SIGNAL(clicked()), this, SLOT( onSaveSceneButtonClicked()) );
   
@@ -141,6 +142,7 @@ void qSlicerSessionManagerModuleWidget::setup()
 
 }
 
+/*
 void qSlicerSessionManagerModuleWidget::onLogoutButtonClicked()
 {
   Q_D( qSlicerSessionManagerModuleWidget );
@@ -148,11 +150,11 @@ void qSlicerSessionManagerModuleWidget::onLogoutButtonClicked()
   d->pushButtonLogin->setEnabled(true);
 
   //hide everything except login fields
-  //d->groupBox->hide();
-  //d->groupBoxTraineeData->hide();
- // d->groupBox_loadSession->hide();
-
+  d->groupBox->hide();
+  d->groupBoxTraineeData->hide();
+  d->groupBox_loadSession->hide();
 }
+*/
 
 void qSlicerSessionManagerModuleWidget::loadSessionSetup()//may be unnecessary
 {
