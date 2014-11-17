@@ -30,7 +30,7 @@ limitations under the License.
 #include <qMRMLUtils.h>
 
 #include "vtkSlicerSessionManagerLogic.h"
-#include "vtkMRMLLinearTransformNode.h"
+//#include "vtkMRMLLinearTransformNode.h"
 
 //#include "qMRMLNodeComboBox.h"
 //#include "vtkMRMLViewNode.h"
@@ -167,17 +167,49 @@ void qSlicerSessionManagerModuleWidget::loadSessionSetup()//may be unnecessary
 
 }
 
-void qSlicerSessionManagerModuleWidget::enter()
-{
-  this->Superclass::enter();
-  this->updateWidget();
-}
-
 void qSlicerSessionManagerModuleWidget
 ::updateWidget()
 {
   Q_D( qSlicerSessionManagerModuleWidget );
 }
+
+void qSlicerSessionManagerModuleWidget
+::updateFromMRMLNode()
+{
+  Q_D( qSlicerSessionManagerModuleWidget );
+}
+
+
+void qSlicerSessionManagerModuleWidget::enter()
+{
+  this->Superclass::enter();
+  this->updateWidget();   // what does this do??
+
+  // Create a node by default if none already exists
+  int numTrainingSessionNodes = this->mrmlScene()->GetNumberOfNodesByClass( "vtkMRMLTrainingSessionNode" );
+
+  if ( numTrainingSessionNodes == 0 )
+  {
+     vtkMRMLTrainingSessionNode* trainingSessionNode;
+     trainingSessionNode = vtkMRMLTrainingSessionNode::New();
+     this->mrmlScene()->RegisterNodeClass( trainingSessionNode );
+     //TrainingSessionNode.TakeReference( this->mrmlScene()->CreateNodeByClass( "vtkMRMLTrainingSessionNode" ) );
+
+     trainingSessionNode->SetSaveWithScene(true);
+     trainingSessionNode->SetName("Training Session Data");
+    
+     trainingSessionNode->SetScene( this->mrmlScene() );
+     this->mrmlScene()->AddNode( trainingSessionNode );
+    // d->ModuleNodeComboBox->setCurrentNode( TrainingSessionNode );
+    // TrainingSessionNode = NULL;
+     trainingSessionNode->Delete();
+  }
+  else
+  {
+    this->updateFromMRMLNode();
+  }
+}
+
 
 //pushButtonOKLoad
 void qSlicerSessionManagerModuleWidget
@@ -214,7 +246,7 @@ void qSlicerSessionManagerModuleWidget
 void qSlicerSessionManagerModuleWidget
 ::onCreateUserButtonClicked()
 {
-  Q_D( qSlicerSessionManagerModuleWidget );
+  Q_D( qSlicerSessionManagerModuleWidget);
 
   bool createdNew;
   createdNew = d->SessionManagerLogic->createUser("PerkTutorSessions.db", d->lineEditUsername->text(), d->lineEditPassword->text());

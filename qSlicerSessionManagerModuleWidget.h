@@ -45,6 +45,8 @@ protected:
 protected slots:
 
   void updateWidget();
+  void updateFromMRMLNode();
+
   void onCreateTraineeButtonClicked();
   void onCreateUserButtonClicked();
   void onLoginButtonClicked();

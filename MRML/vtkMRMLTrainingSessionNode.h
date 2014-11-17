@@ -33,16 +33,16 @@ public:
   //TrainingSession Get/Set Methods
   void setTraineeID(std::string trainee);
   void setStudyName(std::string study);
-  void setAssignmentID(int assignmentid);
+  void setAssignmentID(std::string assignmentid);
 
   std::string getTraineeID();
   std::string getStudyName();
-  int getAssignmentID();
+  std::string getAssignmentID();
  
 private:
   std::string trainee_id;
   std::string study_name;
-  int assignment_id;
+  std::string assignment_id;
 
 protected:
   // Constructor/ destructor methods

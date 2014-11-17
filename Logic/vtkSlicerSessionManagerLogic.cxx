@@ -54,12 +54,24 @@ QString vtkSlicerSessionManagerLogic
 ::saveSession(QString studyname, QString traineeID, int assignmentid)
 {
   //create mrml node, register and add to scene
-  vtkMRMLTrainingSessionNode* sessionNode = vtkMRMLTrainingSessionNode::New();
-  this->GetMRMLScene()->RegisterNodeClass( sessionNode );
-  this->GetMRMLScene()->AddNode(sessionNode);
-  sessionNode->Delete();
+  //vtkMRMLTrainingSessionNode* sessionNode = vtkMRMLTrainingSessionNode::New();
+  //this->GetMRMLScene()->RegisterNodeClass( sessionNode );
+  //this->GetMRMLScene()->AddNode(sessionNode);
+  //sessionNode->Delete();
+  //printf(this->GetMRMLScene()->GetSceneXMLString().c_str());
 
-  printf(this->GetMRMLScene()->GetSceneXMLString().c_str());
+  //get the node? 
+  
+    //save variables to the mrmlscene
+    //safe down cast?
+    //this->GetMRM
+    vtkMRMLTrainingSessionNode* thisnode = (vtkMRMLTrainingSessionNode*)this->GetMRMLScene()->GetNodeByID("vtkMRMLTrainingSessionNodeSingleton");
+    if(thisnode)
+    {
+      //do something
+      thisnode->setStudyName(studyname.toStdString());
+      thisnode->setTraineeID(traineeID.toStdString());
+    }
 
   /*TO DO: Note: Directory structure created elsewhere. Write a "getPath" method so that the following format is not hardcoded in several places*/
   QString home = QDir::toNativeSeparators(QDir::homePath());
@@ -72,7 +84,7 @@ QString vtkSlicerSessionManagerLogic
   
   int filenum = list.size() + 1;
 
-  path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-Session'") + QString::number(filenum) + ".mrb";
+  path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-Session'") + QString::number(filenum) + ".mrml";
 
   //save scene and mrml node
   qSlicerIO::IOProperties properties_map;
