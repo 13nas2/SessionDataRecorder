@@ -25,6 +25,8 @@
 #include "qSlicerIOManager.h"
 #include "qSlicerApplication.h"
 
+#include "qSlicerDataDialog.h"
+
 //----------------------------------------------------------------------------
 vtkStandardNewMacro(vtkSlicerSessionManagerLogic);
 ////----------------------------------------------------------------------------
@@ -53,45 +55,73 @@ void vtkSlicerSessionManagerLogic::setSessionNode(QString traineeID, QString stu
 QString vtkSlicerSessionManagerLogic
 ::saveSession(QString studyname, QString traineeID, int assignmentid)
 {
+  QString trainee_netid = traineeID.split(',').first();
+
   //create mrml node, register and add to scene
   //vtkMRMLTrainingSessionNode* sessionNode = vtkMRMLTrainingSessionNode::New();
   //this->GetMRMLScene()->RegisterNodeClass( sessionNode );
   //this->GetMRMLScene()->AddNode(sessionNode);
   //sessionNode->Delete();
-  //printf(this->GetMRMLScene()->GetSceneXMLString().c_str());
 
-  //get the node? 
-  
-    //save variables to the mrmlscene
-    //safe down cast?
-    //this->GetMRM
-    vtkMRMLTrainingSessionNode* thisnode = (vtkMRMLTrainingSessionNode*)this->GetMRMLScene()->GetNodeByID("vtkMRMLTrainingSessionNodeSingleton");
-    if(thisnode)
-    {
-      //do something
-      thisnode->setStudyName(studyname.toStdString());
-      thisnode->setTraineeID(traineeID.toStdString());
-    }
+  vtkMRMLTrainingSessionNode* thisnode = (vtkMRMLTrainingSessionNode*)this->GetMRMLScene()->GetNodeByID("vtkMRMLTrainingSessionNodeSingleton");
+  if(thisnode)
+  {
+     thisnode->setStudyName(studyname.toStdString());
+     thisnode->setTraineeID(trainee_netid.toStdString());
+  }
 
   /*TO DO: Note: Directory structure created elsewhere. Write a "getPath" method so that the following format is not hardcoded in several places*/
   QString home = QDir::toNativeSeparators(QDir::homePath());
-  QString path = home + "\\Study-" + studyname + "\\" + traineeID.split(',').first();
+  QString path = home + "\\Study-" + studyname + "\\" + trainee_netid;
 
   //get the number of sessions in the given student's directory
   QDir dir(path);
   dir.setFilter(QDir::Files | QDir::NoSymLinks);
   QFileInfoList list = dir.entryInfoList();
-  
   int filenum = list.size() + 1;
 
-  path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-Session'") + QString::number(filenum) + ".mrml";
+  path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-Session'") + QString::number(filenum) + ".mrb";
 
   //save scene and mrml node
   qSlicerIO::IOProperties properties_map;
   properties_map["fileName"] = path;
-  qSlicerApplication::application()->ioManager()->saveNodes("SceneFile",properties_map);  //this should save the sessionNode as well since it was added to the scene
+  qSlicerApplication::application()->ioManager()->saveNodes("SceneFile",properties_map);  //saves the sessionNode as well since it was added to the scene in the Widget class
 
   return path;
+}
+
+QStringList vtkSlicerSessionManagerLogic::getFilePaths(QString studyname, QString traineename)
+{
+  QStringList list;
+
+  QString home = QDir::toNativeSeparators(QDir::homePath());
+  QString traineeid = traineename.split(',').first();
+  QString path = home + "\\Study-" + studyname + "\\" + traineeid;  
+
+  qSlicerIO::IOProperties properties_map;
+  properties_map["fileName"] = path;
+
+  qSlicerApplication::application()->ioManager()->openAddDataDialog(); //or pass in QString filename?
+  
+   //qSlicerApplication::application()->ioManager();
+   //qSlicerDataDialog* dataDialog;
+   //dataDialog->exec(properties_map);  //creates runtime error "Variable dataDialog being used without initialization"
+
+   //determine the file path and add it to the dataDialog. Is this possible?
+   //exec does not allow us to do this but possibly DropEvent?
+   //alternatively,create your own dialog?
+
+   //show the files instead of creating the file dialog
+   QDir dir(path);
+   dir.setFilter(QDir::Files | QDir::NoSymLinks);
+   QFileInfoList filelist = dir.entryInfoList();
+
+   for(int i = 1; i< filelist.size(); i++)
+   {
+     list << filelist.at(i).fileName();   
+   }
+
+  return list;
 }
 
 //logic

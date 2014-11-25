@@ -54,7 +54,7 @@ protected slots:
   //void onLogoutButtonClicked();
   void onBrowseButtonClicked();
   void onOKLoadButtonClicked();
-
+  void onFindFilesButtonClicked();
 
 private:
   Q_DECLARE_PRIVATE(qSlicerSessionManagerModuleWidget);

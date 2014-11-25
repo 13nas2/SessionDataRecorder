@@ -29,28 +29,34 @@ vtkMRMLTrainingSessionNode::~vtkMRMLTrainingSessionNode(){
 
 //SET methods
 void vtkMRMLTrainingSessionNode::setTraineeID(std::string trainee){ 
-  trainee_id = trainee;
+  Superclass::SetAttribute("TraineeID", trainee.c_str());
+  //trainee_id = trainee;
 }
 void vtkMRMLTrainingSessionNode
 ::setStudyName(std::string study){
-  study_name = study;
+  Superclass::SetAttribute("Study Name", study.c_str());
+  //study_name = study;
 }
 
 void vtkMRMLTrainingSessionNode::setAssignmentID(std::string assignment){
-  assignment_id = assignment;
+  Superclass::SetAttribute("AssignmentID", assignment.c_str());
+  //assignment_id = assignment;
 }
 
 //GET methods
 std::string vtkMRMLTrainingSessionNode::getTraineeID(){
-  return trainee_id;
+  return std::string(Superclass::GetAttribute("TraineeID"));
+  //return trainee_id;
 }
 
 std::string vtkMRMLTrainingSessionNode::getStudyName(){
-  return study_name;
+  return std::string(Superclass::GetAttribute("Study Name"));
+  //return study_name;
 }
 
 std::string vtkMRMLTrainingSessionNode::getAssignmentID(){
-  return assignment_id;
+  return std::string(Superclass::GetAttribute("AssignmentID"));
+  //return assignment_id;
 }
 
 
@@ -78,6 +84,7 @@ void vtkMRMLTrainingSessionNode::ReadXMLAttributes( const char** atts )
 {
   Superclass::ReadXMLAttributes(atts);
 
+  /*
   const char* attName;
   const char* attValue;
 
@@ -99,23 +106,27 @@ void vtkMRMLTrainingSessionNode::ReadXMLAttributes( const char** atts )
       this->assignment_id = attValue;
     }
   }
+  */
   this->Modified();
 }
 
 void vtkMRMLTrainingSessionNode::WriteXML( ostream& of, int nIndent )
 {
   Superclass::WriteXML(of, nIndent); 
-
+/*
   vtkIndent indent(nIndent);
   
   of << indent << " StudyName=\"" << this->study_name << "\"";
   of << indent << " TraineeID=\"" << this->trainee_id << "\"";
   of << indent << " AssignmentID=\"" << this->assignment_id << "\"";
+  */
 }
 
 void vtkMRMLTrainingSessionNode::Copy( vtkMRMLNode *anode )
 {
   Superclass::Copy(anode ); // This will take care of referenced nodes
+
+  /*
   vtkMRMLTrainingSessionNode *node = ( vtkMRMLTrainingSessionNode* ) anode;
   
   // Anything we want in the MRML file we must copy here
@@ -124,7 +135,7 @@ void vtkMRMLTrainingSessionNode::Copy( vtkMRMLNode *anode )
   this->study_name = node->study_name;
   this->trainee_id = node->trainee_id;
   this->assignment_id = node->assignment_id;
-
+*/
   this->Modified();
 
 }
