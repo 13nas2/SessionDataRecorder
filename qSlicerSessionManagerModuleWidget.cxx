@@ -130,6 +130,8 @@ void qSlicerSessionManagerModuleWidget::setup()
   connect(d->pushButtonSaveSessionData, SIGNAL(clicked()), this, SLOT( onSaveSceneButtonClicked()) );
 
   connect(d->pushButtonFindFiles, SIGNAL(clicked()), this, SLOT (onFindFilesButtonClicked()) );
+  
+  connect(d->pushButtonLoadScenes, SIGNAL(clicked()), this, SLOT (onLoadScenesButtonClicked()));
 
   //set up load session tab with
 
@@ -140,7 +142,7 @@ void qSlicerSessionManagerModuleWidget::setup()
 
   //show groupBoxes
   d->groupBox->show();
-  d->groupBoxTraineeData->show();
+ // d->groupBoxTraineeData->show();
  // d->groupBox_loadSession->show();
 
 }
@@ -221,17 +223,28 @@ void qSlicerSessionManagerModuleWidget
   Q_D( qSlicerSessionManagerModuleWidget );
   QString filepath = d->lineEdit_filename->text();
 
-  d->lineEdit_filename->clear();
+  //d->lineEdit_filename->clear();
   //d->label_output->setText(filepath);
 
   QString studyname = d->SessionManagerLogic->getStudyNameAndMakeDirectory(filepath);
   d->ComboBoxStudyNames->addItems(d->SessionManagerLogic->getFilenames());
-  d->ComboBoxStudyNames->setEnabled(true);
-  QMessageBox::information(0, "Created/Updated Study Directory:\n", QDir::homePath() + "/Study-" + studyname);
-
-  QStringList studentlist = d->SessionManagerLogic->getTraineeInformation(filepath, studyname);\
+  d->ComboBoxStudyNames_2->addItems(d->SessionManagerLogic->getFilenames());
+  //QMessageBox::information(0, "Created/Updated Study Directory:\n", QDir::homePath() + "/Study-" + studyname);
+  QStringList studentlist = d->SessionManagerLogic->getTraineeInformation(filepath, studyname);
   d->ComboBoxTrainees->addItems(studentlist);
-  d->ComboBoxTrainees->setEnabled(true);
+  d->ComboBoxTrainees_2->addItems(studentlist);
+
+  QString s = d->ComboBox_Mode->currentText();
+  if (s.contains("Save"))
+  {
+    d->SaveCollapsibleButton->setCollapsed(false);
+    d->LoadSessionCollapsibleButton->setCollapsed(true);
+  }
+  else
+  {
+    d->LoadSessionCollapsibleButton->setCollapsed(false);
+    d->SaveCollapsibleButton->setCollapsed(true);
+  }
 }
 
 void qSlicerSessionManagerModuleWidget
@@ -252,8 +265,8 @@ void qSlicerSessionManagerModuleWidget
   QString studyname = d->ComboBoxStudyNames->currentText();
   QString traineename = d->ComboBoxTrainees->currentText();
   int assignid = 0;
-  if(d->ComboBoxAssignments->currentText() != "")
-    assignid = d->ComboBoxAssignments->currentText().toInt();
+  //if(d->ComboBoxAssignments->currentText() != "")
+    //assignid = d->ComboBoxAssignments->currentText().toInt();
   
   QString saved = d->SessionManagerLogic->saveSession(studyname, traineename, assignid);
   QMessageBox::information(0, "Saved scene to ", saved);
@@ -265,14 +278,34 @@ void qSlicerSessionManagerModuleWidget
 {
   Q_D( qSlicerSessionManagerModuleWidget );
 
-  QString studyname = d->ComboBoxStudyNames->currentText();
-  QString traineename = d->ComboBoxTrainees->currentText();
+  QString studyname = d->ComboBoxStudyNames_2->currentText();
+  QString trainee_id = d->ComboBoxTrainees_2->currentText();
 
-  QStringList list = d->SessionManagerLogic->getFilePaths(studyname, traineename);
-
+  d->listWidgetScenes->clear();
+  QStringList list = d->SessionManagerLogic->getFilePaths(studyname, trainee_id);
   d->listWidgetScenes->insertItems(0, list);
   
   updateWidget();
+}
+
+void qSlicerSessionManagerModuleWidget
+::onLoadScenesButtonClicked()
+{
+  Q_D( qSlicerSessionManagerModuleWidget);
+
+  //get the contents of the listWidget and open each file.
+  QList< QListWidgetItem * > items = d->listWidgetScenes->selectedItems();
+  
+  QStringList filenames;
+  foreach(QListWidgetItem* item, items)
+  {
+    filenames << item->text();
+  } 
+
+  QString file = d->listWidgetScenes->currentItem()->text();
+  bool success = d->SessionManagerLogic->loadFile(file);
+  if(!success)
+    QMessageBox::information(0, "Cannot open the given files", "Error opening files");
   
 }
 

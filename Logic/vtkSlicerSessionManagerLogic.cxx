@@ -80,7 +80,8 @@ QString vtkSlicerSessionManagerLogic
   QFileInfoList list = dir.entryInfoList();
   int filenum = list.size() + 1;
 
-  path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-Session'") + QString::number(filenum) + ".mrb";
+  QString sessnum = QString("%1").arg(filenum, 3, 10, QChar('0'));
+  path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-session'") + sessnum + ".mrml";
 
   //save scene and mrml node
   qSlicerIO::IOProperties properties_map;
@@ -90,39 +91,57 @@ QString vtkSlicerSessionManagerLogic
   return path;
 }
 
-QStringList vtkSlicerSessionManagerLogic::getFilePaths(QString studyname, QString traineename)
+QStringList vtkSlicerSessionManagerLogic::getFilePaths(QString studyname, QString trainee)
 {
   QStringList list;
 
   QString home = QDir::toNativeSeparators(QDir::homePath());
-  QString traineeid = traineename.split(',').first();
+  QString traineeid = trainee.split(',').first();
   QString path = home + "\\Study-" + studyname + "\\" + traineeid;  
 
-  qSlicerIO::IOProperties properties_map;
-  properties_map["fileName"] = path;
-
-  qSlicerApplication::application()->ioManager()->openAddDataDialog(); //or pass in QString filename?
+  //qSlicerIO::IOProperties properties_map;
+  //properties_map["fileName"] = path;
+  //qSlicerApplication::application()->ioManager()->openAddDataDialog(); //or pass in QString filename?
   
    //qSlicerApplication::application()->ioManager();
    //qSlicerDataDialog* dataDialog;
    //dataDialog->exec(properties_map);  //creates runtime error "Variable dataDialog being used without initialization"
 
    //determine the file path and add it to the dataDialog. Is this possible?
-   //exec does not allow us to do this but possibly DropEvent?
-   //alternatively,create your own dialog?
+   //exec does not allow us to do this but possibly DropEvent? Alternatively,create your own dialog?
 
    //show the files instead of creating the file dialog
    QDir dir(path);
    dir.setFilter(QDir::Files | QDir::NoSymLinks);
    QFileInfoList filelist = dir.entryInfoList();
 
-   for(int i = 1; i< filelist.size(); i++)
+   for(int i = 0; i< filelist.size(); i++)
    {
-     list << filelist.at(i).fileName();   
+     //list << filelist.at(i).fileName(); 
+     list << filelist.at(i).absoluteFilePath();
    }
 
   return list;
 }
+
+bool vtkSlicerSessionManagerLogic::loadFile(QString filename)
+{
+   //given a list of filenames, load them into Slicer.
+
+   //how to load files programmatically
+  qSlicerCoreIOManager* coreIOManager = qSlicerCoreApplication::application()->coreIOManager();
+  //qSlicerIO::IOProperties parameters;
+  //parameters["filename"] = filename;
+  //vtkMRMLNode* sceneNode = coreIOManager->loadNodesAndGetFirst("SceneFile", parameters);
+  
+  return coreIOManager->loadScene(filename);
+
+  /*if(sceneNode)
+    return true;
+  else
+    return false;*/
+
+ }
 
 //logic
 /*
@@ -141,10 +160,12 @@ QString vtkSlicerSessionManagerLogic::getStudyNameAndMakeDirectory(QString filep
       filenames << filename;  //add CSV filename to list of filenames
 
       //make directory for filename
-      std::string path = QDir::homePath().toStdString() + "/Study-" + filename.toStdString();
-      int result = _mkdir(path.c_str());
+      QString path = QDir::homePath() + "/Study-" + filename;
+      //filenames << path; //add path to list of filenames.
+      std::string pathstring = path.toStdString();
+      int result = _mkdir(pathstring.c_str());
       if( result == 0)
-        printf("Directory %s created",path.c_str());
+        printf("Directory %s created",pathstring.c_str());
       else
         printf("Study directory already exists or could not be created");
 
@@ -202,6 +223,9 @@ QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath
 	inputFile.close();
 	return studentlist;
 }
+
+
+
 
 bool vtkSlicerSessionManagerLogic::createUser(QString databaseName, QString username, QString password)
 {
