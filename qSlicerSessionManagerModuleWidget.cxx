@@ -133,17 +133,9 @@ void qSlicerSessionManagerModuleWidget::setup()
   
   connect(d->pushButtonLoadScenes, SIGNAL(clicked()), this, SLOT (onLoadScenesButtonClicked()));
 
-  //set up load session tab with
-
-  //hide everything except login fields
- // d->groupBox->hide();
- // d->groupBoxTraineeData->hide();
-  //d->groupBox_loadSession->hide();
 
   //show groupBoxes
   d->groupBox->show();
- // d->groupBoxTraineeData->show();
- // d->groupBox_loadSession->show();
 
 }
 
@@ -165,11 +157,8 @@ void qSlicerSessionManagerModuleWidget::loadSessionSetup()//may be unnecessary
 {
   Q_D( qSlicerSessionManagerModuleWidget );
 
-  //populate the combo box with student ids in the database
+  //populate the combo box with student IDs in the database
   //need to open database, check for sessions table, get records with unique user id field.
-
-  
-
 }
 
 void qSlicerSessionManagerModuleWidget
@@ -188,7 +177,7 @@ void qSlicerSessionManagerModuleWidget
 void qSlicerSessionManagerModuleWidget::enter()
 {
   this->Superclass::enter();
-  this->updateWidget();   // what does this do??
+  this->updateWidget(); 
 
   // Create a node by default if none already exists
   int numTrainingSessionNodes = this->mrmlScene()->GetNumberOfNodesByClass( "vtkMRMLTrainingSessionNode" );
@@ -264,11 +253,14 @@ void qSlicerSessionManagerModuleWidget
 
   QString studyname = d->ComboBoxStudyNames->currentText();
   QString traineename = d->ComboBoxTrainees->currentText();
+  QString status = d->buttonGroupStatus->checkedButton()->text();
+  QString comments = d->plainTextEditComments->toPlainText();
+
   int assignid = 0;
   //if(d->ComboBoxAssignments->currentText() != "")
     //assignid = d->ComboBoxAssignments->currentText().toInt();
   
-  QString saved = d->SessionManagerLogic->saveSession(studyname, traineename, assignid);
+  QString saved = d->SessionManagerLogic->saveSession(studyname, traineename, status, comments);
   QMessageBox::information(0, "Saved scene to ", saved);
 }
 
