@@ -43,6 +43,16 @@ void vtkMRMLTrainingSessionNode::setAssignmentID(std::string assignment){
   //assignment_id = assignment;
 }
 
+void vtkMRMLTrainingSessionNode::setSessionStatus(std::string sessionstatus){
+  Superclass::SetAttribute("Status", sessionstatus.c_str());
+}
+
+void vtkMRMLTrainingSessionNode::setComments(std::string comments){
+  Superclass::SetAttribute("Comments", comments.c_str());
+}
+
+
+
 //GET methods
 std::string vtkMRMLTrainingSessionNode::getTraineeID(){
   return std::string(Superclass::GetAttribute("TraineeID"));
@@ -58,6 +68,16 @@ std::string vtkMRMLTrainingSessionNode::getAssignmentID(){
   return std::string(Superclass::GetAttribute("AssignmentID"));
   //return assignment_id;
 }
+
+std::string vtkMRMLTrainingSessionNode::getSessionStatus(){
+  return std::string(Superclass::GetAttribute("Status"));
+}
+
+std::string vtkMRMLTrainingSessionNode::getComments(){
+  return std::string(Superclass::GetAttribute("Comments"));
+}
+
+
 
 
 vtkMRMLNode* vtkMRMLTrainingSessionNode::CreateNodeInstance()

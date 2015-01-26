@@ -34,15 +34,21 @@ public:
   void setTraineeID(std::string trainee);
   void setStudyName(std::string study);
   void setAssignmentID(std::string assignmentid);
+  void setSessionStatus(std::string sessionstatus);
+  void setComments(std::string comments);
 
   std::string getTraineeID();
   std::string getStudyName();
   std::string getAssignmentID();
+  std::string getSessionStatus();
+  std::string getComments();
  
 private:
   std::string trainee_id;
   std::string study_name;
   std::string assignment_id;
+  std::string sessionstatus;
+  std::string comments;
 
 protected:
   // Constructor/ destructor methods

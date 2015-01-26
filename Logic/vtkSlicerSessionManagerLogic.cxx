@@ -53,9 +53,9 @@ void vtkSlicerSessionManagerLogic::setSessionNode(QString traineeID, QString stu
 }
 
 QString vtkSlicerSessionManagerLogic
-::saveSession(QString studyname, QString traineeID, int assignmentid)
+::saveSession(QString studyname, QString trainee, QString sessionstatus, QString comments)
 {
-  QString trainee_netid = traineeID.split(',').first();
+  QString trainee_netid = trainee.split(',').last().split('-').last().trimmed();
 
   //create mrml node, register and add to scene
   //vtkMRMLTrainingSessionNode* sessionNode = vtkMRMLTrainingSessionNode::New();
@@ -68,6 +68,8 @@ QString vtkSlicerSessionManagerLogic
   {
      thisnode->setStudyName(studyname.toStdString());
      thisnode->setTraineeID(trainee_netid.toStdString());
+     thisnode->setSessionStatus(sessionstatus.toStdString()); //set sessionstatus
+     thisnode->setComments(comments.toStdString()); //set comments
   }
 
   /*TO DO: Note: Directory structure created elsewhere. Write a "getPath" method so that the following format is not hardcoded in several places*/
@@ -96,7 +98,7 @@ QStringList vtkSlicerSessionManagerLogic::getFilePaths(QString studyname, QStrin
   QStringList list;
 
   QString home = QDir::toNativeSeparators(QDir::homePath());
-  QString traineeid = trainee.split(',').first();
+  QString traineeid = trainee.split(',').last().split('-').last().trimmed();
   QString path = home + "\\Study-" + studyname + "\\" + traineeid;  
 
   //qSlicerIO::IOProperties properties_map;
@@ -128,7 +130,7 @@ bool vtkSlicerSessionManagerLogic::loadFile(QString filename)
 {
    //given a list of filenames, load them into Slicer.
 
-   //how to load files programmatically
+  //how to load files programmatically
   qSlicerCoreIOManager* coreIOManager = qSlicerCoreApplication::application()->coreIOManager();
   //qSlicerIO::IOProperties parameters;
   //parameters["filename"] = filename;
@@ -153,12 +155,15 @@ QString vtkSlicerSessionManagerLogic::getStudyNameAndMakeDirectory(QString filep
    QFile file(filepath); // filepath contains full file path name
    QString filename;
    if (file.exists())
-    {
+   {
       QFileInfo fileInfo(file);
       filename = fileInfo.fileName(); // Return only a file name
       filename.truncate(filename.indexOf("Grades"));
+      filename = filename.simplified();
+      filename.replace( " ","");
       filenames << filename;  //add CSV filename to list of filenames
-
+      filenames.removeDuplicates();
+      
       //make directory for filename
       QString path = QDir::homePath() + "/Study-" + filename;
       //filenames << path; //add path to list of filenames.
@@ -168,7 +173,6 @@ QString vtkSlicerSessionManagerLogic::getStudyNameAndMakeDirectory(QString filep
         printf("Directory %s created",pathstring.c_str());
       else
         printf("Study directory already exists or could not be created");
-
     }
     return filename;
 }
@@ -196,7 +200,7 @@ QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath
 
 	//first line is the "headers": NetId, First Name, Surname, Student Number, "Assignment:..." 
 	std::string header;
-	getline(inputFile, header); // gets the header line
+	getline(inputFile, header); //gets the header line
 
 	QStringList studentlist;
 	std::string studentline;
@@ -218,14 +222,13 @@ QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath
         QStringList studentdata = line.split(",");
 
         number_of_students++;
-        studentlist << QString(studentdata.at(0) + ", " + studentdata.at(1) + " " + studentdata.at(2)); 
+        //studentlist << QString(studentdata.at(0) + ", " + studentdata.at(1) + " " + studentdata.at(2)); 
+        //flip order ( display lastname, first name - student id)
+        studentlist << QString(studentdata.at(2) + ", " + studentdata.at(1) + " - " + studentdata.at(0));
 	}
 	inputFile.close();
 	return studentlist;
 }
-
-
-
 
 bool vtkSlicerSessionManagerLogic::createUser(QString databaseName, QString username, QString password)
 {

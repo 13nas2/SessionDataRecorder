@@ -204,7 +204,6 @@ void qSlicerSessionManagerModuleWidget::enter()
   }
 }
 
-
 //pushButtonOKLoad
 void qSlicerSessionManagerModuleWidget
 ::onOKLoadButtonClicked()
@@ -216,8 +215,12 @@ void qSlicerSessionManagerModuleWidget
   //d->label_output->setText(filepath);
 
   QString studyname = d->SessionManagerLogic->getStudyNameAndMakeDirectory(filepath);
-  d->ComboBoxStudyNames->addItems(d->SessionManagerLogic->getFilenames());
-  d->ComboBoxStudyNames_2->addItems(d->SessionManagerLogic->getFilenames());
+  QStringList filenames = d->SessionManagerLogic->getFilenames();
+  filenames.removeDuplicates();
+  d->ComboBoxStudyNames->clear();
+  d->ComboBoxStudyNames_2->clear();
+  d->ComboBoxStudyNames->addItems(filenames);
+  d->ComboBoxStudyNames_2->addItems(filenames);
   //QMessageBox::information(0, "Created/Updated Study Directory:\n", QDir::homePath() + "/Study-" + studyname);
   QStringList studentlist = d->SessionManagerLogic->getTraineeInformation(filepath, studyname);
   d->ComboBoxTrainees->addItems(studentlist);
@@ -252,7 +255,7 @@ void qSlicerSessionManagerModuleWidget
   Q_D( qSlicerSessionManagerModuleWidget );
 
   QString studyname = d->ComboBoxStudyNames->currentText();
-  QString traineename = d->ComboBoxTrainees->currentText();
+  QString trainee_info = d->ComboBoxTrainees->currentText();
   QString status = d->buttonGroupStatus->checkedButton()->text();
   QString comments = d->plainTextEditComments->toPlainText();
 
@@ -260,10 +263,9 @@ void qSlicerSessionManagerModuleWidget
   //if(d->ComboBoxAssignments->currentText() != "")
     //assignid = d->ComboBoxAssignments->currentText().toInt();
   
-  QString saved = d->SessionManagerLogic->saveSession(studyname, traineename, status, comments);
+  QString saved = d->SessionManagerLogic->saveSession(studyname, trainee_info, status, comments);
   QMessageBox::information(0, "Saved scene to ", saved);
 }
-
 
 void qSlicerSessionManagerModuleWidget
 ::onFindFilesButtonClicked()
@@ -271,17 +273,19 @@ void qSlicerSessionManagerModuleWidget
   Q_D( qSlicerSessionManagerModuleWidget );
 
   QString studyname = d->ComboBoxStudyNames_2->currentText();
-  QString trainee_id = d->ComboBoxTrainees_2->currentText();
+  QString trainee_info = d->ComboBoxTrainees_2->currentText();
 
   d->listWidgetScenes->clear();
-  QStringList list = d->SessionManagerLogic->getFilePaths(studyname, trainee_id);
+  QStringList list = d->SessionManagerLogic->getFilePaths(studyname, trainee_info);
+  //check if the item has already been added to the list
+  //
   d->listWidgetScenes->insertItems(0, list);
   
   updateWidget();
 }
 
 void qSlicerSessionManagerModuleWidget
-::onLoadScenesButtonClicked()
+::onLoadScenesButtonClicked() /* loads the scenes associated with the selected user and study*/
 {
   Q_D( qSlicerSessionManagerModuleWidget);
 
@@ -298,7 +302,6 @@ void qSlicerSessionManagerModuleWidget
   bool success = d->SessionManagerLogic->loadFile(file);
   if(!success)
     QMessageBox::information(0, "Cannot open the given files", "Error opening files");
-  
 }
 
 /*TO DO: remove this code or update so it does not use local db*/

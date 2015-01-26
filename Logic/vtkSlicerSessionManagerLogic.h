@@ -67,7 +67,7 @@ public:
   //other functions
   void setSessionNode(QString traineeID, QString studyname, int assignmentid);
   
-  QString saveSession(QString traineeID, QString studyname, int assignmentid);
+  QString saveSession(QString traineeID, QString studyname, QString sessionstatus, QString comments);
 
   QStringList getFilePaths(QString studyname, QString trainee);
 

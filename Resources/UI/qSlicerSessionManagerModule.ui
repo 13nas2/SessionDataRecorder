@@ -6,21 +6,134 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>538</width>
-    <height>681</height>
+    <width>612</width>
+    <height>825</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>345</width>
-    <height>0</height>
+    <height>100</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="1">
+   <item row="4" column="0">
+    <widget class="ctkCollapsibleGroupBox" name="CollapsibleGroupBox">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="title">
+      <string>Settings</string>
+     </property>
+     <widget class="QLabel" name="label_CSVFile">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>101</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Input File (CSV):</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_filename">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>20</y>
+        <width>341</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonBrowse">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>20</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Browse...</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonOKLoad">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>50</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>OK</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_CSVFile_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Mode:</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="ComboBox_Mode">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>50</y>
+        <width>341</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <item>
+       <property name="text">
+        <string>Save Session</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Load Session</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+   </item>
+   <item row="5" column="0">
     <widget class="ctkCollapsibleButton" name="SaveCollapsibleButton">
      <property name="enabled">
       <bool>true</bool>
@@ -34,14 +147,17 @@
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>200</height>
+       <height>250</height>
       </size>
      </property>
      <property name="text">
       <string>Save Current Session</string>
      </property>
      <property name="collapsed">
-      <bool>true</bool>
+      <bool>false</bool>
+     </property>
+     <property name="collapsedHeight">
+      <number>13</number>
      </property>
      <property name="contentsFrameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -51,8 +167,8 @@
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>491</width>
-        <height>131</height>
+        <width>501</width>
+        <height>211</height>
        </rect>
       </property>
       <property name="title">
@@ -86,6 +202,12 @@
          <height>21</height>
         </rect>
        </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="editable">
         <bool>false</bool>
        </property>
@@ -116,7 +238,7 @@
        <property name="geometry">
         <rect>
          <x>90</x>
-         <y>90</y>
+         <y>180</y>
          <width>391</width>
          <height>21</height>
         </rect>
@@ -165,7 +287,7 @@
         </palette>
        </property>
        <property name="text">
-        <string>Save Current Session </string>
+        <string>Save  Session </string>
        </property>
       </widget>
       <widget class="QLabel" name="label_8">
@@ -184,26 +306,109 @@
         <string>Trainee:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_9">
+      <widget class="QLabel" name="label_11">
        <property name="enabled">
         <bool>true</bool>
        </property>
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>100</y>
+         <x>10</x>
+         <y>80</y>
          <width>71</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Session Status:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_12">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>110</y>
+         <width>71</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Comments:</string>
+       </property>
+      </widget>
+      <widget class="QPlainTextEdit" name="plainTextEditComments">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>120</y>
+         <width>391</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="radioButton2">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>90</y>
+         <width>81</width>
          <height>21</height>
         </rect>
        </property>
        <property name="text">
-        <string/>
+        <string>In Progress</string>
        </property>
+       <attribute name="buttonGroup">
+        <string>buttonGroupStatus</string>
+       </attribute>
+      </widget>
+      <widget class="QRadioButton" name="radioButton1">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>90</y>
+         <width>82</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Completed</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <attribute name="buttonGroup">
+        <string>buttonGroupStatus</string>
+       </attribute>
+      </widget>
+      <widget class="QRadioButton" name="radioButton3">
+       <property name="geometry">
+        <rect>
+         <x>380</x>
+         <y>90</y>
+         <width>81</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Abandoned</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string>buttonGroupStatus</string>
+       </attribute>
       </widget>
      </widget>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="6" column="0">
     <widget class="ctkCollapsibleButton" name="LoadSessionCollapsibleButton">
      <property name="enabled">
       <bool>true</bool>
@@ -217,7 +422,7 @@
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>300</height>
+       <height>350</height>
       </size>
      </property>
      <property name="text">
@@ -227,7 +432,7 @@
       <string>Ctrl+S</string>
      </property>
      <property name="collapsed">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="contentsFrameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -237,12 +442,15 @@
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>491</width>
-        <height>241</height>
+        <width>681</width>
+        <height>321</height>
        </rect>
       </property>
       <property name="title">
        <string>Load Slicer Files</string>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
       </property>
       <widget class="ctkComboBox" name="ComboBoxTrainees_2">
        <property name="enabled">
@@ -378,119 +586,6 @@
      </widget>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="ctkCollapsibleGroupBox" name="CollapsibleGroupBox">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>100</height>
-      </size>
-     </property>
-     <property name="title">
-      <string>Settings</string>
-     </property>
-     <widget class="QLabel" name="label_CSVFile">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Input File (CSV):</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEdit_filename">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>20</y>
-        <width>341</width>
-        <height>21</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButtonBrowse">
-      <property name="geometry">
-       <rect>
-        <x>450</x>
-        <y>20</y>
-        <width>71</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Browse...</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButtonOKLoad">
-      <property name="geometry">
-       <rect>
-        <x>450</x>
-        <y>50</y>
-        <width>71</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>OK</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_CSVFile_2">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>50</y>
-        <width>71</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Mode:</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="ComboBox_Mode">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>50</y>
-        <width>341</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <item>
-       <property name="text">
-        <string>Save current TrainingSession</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Load previous TrainingSession</string>
-       </property>
-      </item>
-     </widget>
-    </widget>
-   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -520,4 +615,7 @@
  </customwidgets>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroupStatus"/>
+ </buttongroups>
 </ui>
