@@ -83,7 +83,7 @@ QString vtkSlicerSessionManagerLogic
   int filenum = list.size() + 1;
 
   QString sessnum = QString("%1").arg(filenum, 3, 10, QChar('0'));
-  path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-session'") + sessnum + ".mrml";
+  path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-session'") + sessnum + ".mrb";
 
   //save scene and mrml node
   qSlicerIO::IOProperties properties_map;
