@@ -133,6 +133,8 @@ void qSlicerSessionManagerModuleWidget::setup()
   
   connect(d->pushButtonLoadScenes, SIGNAL(clicked()), this, SLOT (onLoadScenesButtonClicked()));
 
+  connect(d->pushButtonBrowseSourceDir, SIGNAL(clicked()), this, SLOT (onSourceBrowseButtonClicked()));
+
 
   //show groupBoxes
   d->groupBox->show();
@@ -250,6 +252,16 @@ void qSlicerSessionManagerModuleWidget
 }
 
 void qSlicerSessionManagerModuleWidget
+::onSourceBrowseButtonClicked()
+{
+  Q_D( qSlicerSessionManagerModuleWidget );
+
+  //use QFileDialog to allow user to select the directory for extra files
+  QString dir = QFileDialog::getExistingDirectory(this, tr("Select Directory"),QDir::homePath(),QFileDialog::ShowDirsOnly| QFileDialog::DontResolveSymlinks);
+  d->lineEdit_directory->setText(dir);
+}
+
+void qSlicerSessionManagerModuleWidget
 ::onSaveSceneButtonClicked()
 {
   Q_D( qSlicerSessionManagerModuleWidget );
@@ -263,8 +275,13 @@ void qSlicerSessionManagerModuleWidget
   //if(d->ComboBoxAssignments->currentText() != "")
     //assignid = d->ComboBoxAssignments->currentText().toInt();
   
-  QString saved = d->SessionManagerLogic->saveSession(studyname, trainee_info, status, comments);
-  QMessageBox::information(0, "Saved scene to ", saved);
+  QString savepath = d->SessionManagerLogic->saveSession(studyname, trainee_info, status, comments);
+  QMessageBox::StandardButton button = QMessageBox::information(0, "Confirm Save As ", savepath, QMessageBox::Ok, QMessageBox::Cancel);
+  if(button == QMessageBox::Ok)
+  {
+    d->SessionManagerLogic->saveSessionConfirmed(savepath);
+    QMessageBox::information(0, "Save successful to ", savepath);
+  }
 }
 
 void qSlicerSessionManagerModuleWidget
@@ -360,7 +377,6 @@ void qSlicerSessionManagerModuleWidget
   }
   */
 }
-
 
 void qSlicerSessionManagerModuleWidget
 ::onCreateTraineeButtonClicked()

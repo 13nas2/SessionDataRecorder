@@ -57,6 +57,8 @@ protected slots:
   void onFindFilesButtonClicked();
   void onLoadScenesButtonClicked();
 
+  void onSourceBrowseButtonClicked();
+
 private:
   Q_DECLARE_PRIVATE(qSlicerSessionManagerModuleWidget);
   Q_DISABLE_COPY(qSlicerSessionManagerModuleWidget);

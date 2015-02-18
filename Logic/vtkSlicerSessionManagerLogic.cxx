@@ -29,11 +29,11 @@
 
 //----------------------------------------------------------------------------
 vtkStandardNewMacro(vtkSlicerSessionManagerLogic);
-////----------------------------------------------------------------------------
+////--------------------------------------------------------------------------
 vtkSlicerSessionManagerLogic::vtkSlicerSessionManagerLogic()
 {
 }
-////----------------------------------------------------------------------------
+////--------------------------------------------------------------------------
 vtkSlicerSessionManagerLogic::~vtkSlicerSessionManagerLogic()
 {
 }
@@ -86,11 +86,23 @@ QString vtkSlicerSessionManagerLogic
   path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-session'") + sessnum + ".mrb";
 
   //save scene and mrml node
-  qSlicerIO::IOProperties properties_map;
-  properties_map["fileName"] = path;
-  qSlicerApplication::application()->ioManager()->saveNodes("SceneFile",properties_map);  //saves the sessionNode as well since it was added to the scene in the Widget class
+  //qSlicerIO::IOProperties properties_map;
+  //properties_map["fileName"] = path;
+  //qSlicerApplication::application()->ioManager()->saveNodes("SceneFile",properties_map);  //saves the sessionNode as well since it was added to the scene in the Widget class
 
   return path;
+}
+
+void vtkSlicerSessionManagerLogic::saveSessionConfirmed(QString path)
+{
+  //save scene and mrml node
+  qSlicerCoreIOManager* coreIOManager = qSlicerCoreApplication::application()->coreIOManager();
+  qSlicerIO::IOProperties properties_map;
+  properties_map["fileName"] = path;
+  //properties_map["nodeID"] not needed because we are saving all nodes?
+  //qSlicerApplication::application()->ioManager()->saveNodes("SceneFile",properties_map);  //saves the sessionNode as well since it was added to the scene in the Widget class
+  coreIOManager->saveNodes("SceneFile",properties_map); 
+
 }
 
 QStringList vtkSlicerSessionManagerLogic::getFilePaths(QString studyname, QString trainee)
@@ -122,7 +134,6 @@ QStringList vtkSlicerSessionManagerLogic::getFilePaths(QString studyname, QStrin
      //list << filelist.at(i).fileName(); 
      list << filelist.at(i).absoluteFilePath();
    }
-
   return list;
 }
 
@@ -152,7 +163,7 @@ Output: QStringList with the the students information ( to be added to the user 
 */
 QString vtkSlicerSessionManagerLogic::getStudyNameAndMakeDirectory(QString filepath)
 {
-   QFile file(filepath); // filepath contains full file path name
+   QFile file(filepath); //filepath contains full file path name
    QString filename;
    if (file.exists())
    {
@@ -165,14 +176,18 @@ QString vtkSlicerSessionManagerLogic::getStudyNameAndMakeDirectory(QString filep
       filenames.removeDuplicates();
       
       //make directory for filename
-      QString path = QDir::homePath() + "/Study-" + filename;
+      QString path = QDir::homePath() + "/Study-" + filename; 
       //filenames << path; //add path to list of filenames.
-      std::string pathstring = path.toStdString();
-      int result = _mkdir(pathstring.c_str());
-      if( result == 0)
+      
+      //std::string pathstring = path.toStdString();
+      //int result = _mkdir(pathstring.c_str());  //replace line with: QDir().mkdir(path);
+      bool failed = QDir().mkpath(path);
+
+      /* //this section used for debugging, not useful in actual use
+      if(!failed)
         printf("Directory %s created",pathstring.c_str());
-      else
-        printf("Study directory already exists or could not be created");
+      */
+
     }
     return filename;
 }
@@ -230,6 +245,16 @@ QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath
 	return studentlist;
 }
 
+void vtkSlicerSessionManagerLogic::checkForExternalFiles(QString filepath)
+{
+  //for all files in filepath: copy from filepath to mypath/studyname/userid
+
+  std::ifstream  src("from.ogv", std::ios::binary);
+  std::ofstream  dst("to.ogv",   std::ios::binary);
+
+  dst << src.rdbuf();
+}
+
 bool vtkSlicerSessionManagerLogic::createUser(QString databaseName, QString username, QString password)
 {
 	//retrieve database
@@ -244,7 +269,6 @@ bool vtkSlicerSessionManagerLogic::createUser(QString databaseName, QString user
 			QSqlQuery query;
 			query.exec("CREATE table users(username varchar(30) primary key, password varchar(30));");
 		}
-
 		//check that user does not already exist in the database
 		QSqlQuery checkUserQuery(database);
 		checkUserQuery.prepare("Select * from users where username = ?");

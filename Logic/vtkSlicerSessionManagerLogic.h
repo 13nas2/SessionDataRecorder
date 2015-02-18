@@ -68,11 +68,13 @@ public:
   void setSessionNode(QString traineeID, QString studyname, int assignmentid);
   
   QString saveSession(QString traineeID, QString studyname, QString sessionstatus, QString comments);
+  void saveSessionConfirmed(QString path);
 
   QStringList getFilePaths(QString studyname, QString trainee);
 
   bool loadFile(QString filename);
 
+  void checkForExternalFiles(QString filepath);
 
 private:
 	//void openDatabase(QString databasename);

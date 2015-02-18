@@ -114,8 +114,7 @@ void qSlicerSessionManagerModule::setup()
   vtkSlicerSessionManagerLogic* SessionManagerLogic = vtkSlicerSessionManagerLogic::SafeDownCast( this->logic() );
   
   // Register the IO
-  app->coreIOManager()->registerIO( new qSlicerSessionManagerIO( SessionManagerLogic, this ) );
-
+  //app->coreIOManager()->registerIO( new qSlicerSessionManagerIO( SessionManagerLogic, this ) );
  
 }
 
