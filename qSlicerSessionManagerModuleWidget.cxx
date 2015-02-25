@@ -270,12 +270,9 @@ void qSlicerSessionManagerModuleWidget
   QString trainee_info = d->ComboBoxTrainees->currentText();
   QString status = d->buttonGroupStatus->checkedButton()->text();
   QString comments = d->plainTextEditComments->toPlainText();
+  QString externalpath = d->lineEdit_directory->text();
 
-  int assignid = 0;
-  //if(d->ComboBoxAssignments->currentText() != "")
-    //assignid = d->ComboBoxAssignments->currentText().toInt();
-  
-  QString savepath = d->SessionManagerLogic->saveSession(studyname, trainee_info, status, comments);
+  QString savepath = d->SessionManagerLogic->saveSession(studyname, trainee_info, status, comments, externalpath);
   QMessageBox::StandardButton button = QMessageBox::information(0, "Confirm Save As ", savepath, QMessageBox::Ok, QMessageBox::Cancel);
   if(button == QMessageBox::Ok)
   {

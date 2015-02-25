@@ -45,6 +45,11 @@ QStringList vtkSlicerSessionManagerLogic::getFilenames()
 {
   return filenames;
 }
+QString vtkSlicerSessionManagerLogic::getCurrentTraineeFilePath()
+{
+  return currentTraineeFilePath;
+}
+
 
 void vtkSlicerSessionManagerLogic::setSessionNode(QString traineeID, QString studyname, int assignmentid)
 {
@@ -53,7 +58,7 @@ void vtkSlicerSessionManagerLogic::setSessionNode(QString traineeID, QString stu
 }
 
 QString vtkSlicerSessionManagerLogic
-::saveSession(QString studyname, QString trainee, QString sessionstatus, QString comments)
+::saveSession(QString studyname, QString trainee, QString sessionstatus, QString comments, QString externalpath)
 {
   QString trainee_netid = trainee.split(',').last().split('-').last().trimmed();
 
@@ -78,18 +83,27 @@ QString vtkSlicerSessionManagerLogic
 
   //get the number of sessions in the given student's directory
   QDir dir(path);
-  dir.setFilter(QDir::Files | QDir::NoSymLinks);
+  //dir.setFilter(QDir::Files | QDir::NoSymLinks);
   QFileInfoList list = dir.entryInfoList();
   int filenum = list.size() + 1;
 
   QString sessnum = QString("%1").arg(filenum, 3, 10, QChar('0'));
-  path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-session'") + sessnum + ".mrb";
 
-  //save scene and mrml node
-  //qSlicerIO::IOProperties properties_map;
-  //properties_map["fileName"] = path;
-  //qSlicerApplication::application()->ioManager()->saveNodes("SceneFile",properties_map);  //saves the sessionNode as well since it was added to the scene in the Widget class
+  path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-session'") + sessnum;
 
+  bool success = QDir().mkdir(path);
+
+  if (success)
+  {
+    this->currentTraineeFilePath = path;
+
+    if(QFile::exists(externalpath))
+      this->checkForExternalFiles(externalpath);
+    
+    path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-SlicerSession'") + sessnum + ".mrb";
+
+
+  }
   return path;
 }
 
@@ -187,7 +201,6 @@ QString vtkSlicerSessionManagerLogic::getStudyNameAndMakeDirectory(QString filep
       if(!failed)
         printf("Directory %s created",pathstring.c_str());
       */
-
     }
     return filename;
 }
@@ -245,14 +258,40 @@ QStringList vtkSlicerSessionManagerLogic::getTraineeInformation(QString filepath
 	return studentlist;
 }
 
-void vtkSlicerSessionManagerLogic::checkForExternalFiles(QString filepath)
+void vtkSlicerSessionManagerLogic::checkForExternalFiles(QString externalpath)
 {
   //for all files in filepath: copy from filepath to mypath/studyname/userid
 
-  std::ifstream  src("from.ogv", std::ios::binary);
-  std::ofstream  dst("to.ogv",   std::ios::binary);
+  //to copy files, use QFile::copy(); if QFile::exists(filename) then delete the destination file and copy source.
+  
+  QDir newdir(externalpath);
+  QStringList fileList = newdir.entryList(QDir::Files);
+  
+  QString currentPath = this->getCurrentTraineeFilePath();
+  QDir currentDir(currentPath);
 
-  dst << src.rdbuf();
+  QString f;
+  foreach (f, fileList)
+  {
+    
+    if(currentDir.exists(f))
+    {
+      /*remove the file (overwrite?) or just dont copy??*/
+    }
+    else
+    { 
+      QFile::copy(newdir.absoluteFilePath(f), currentPath + "/" + QFileInfo(f).fileName());
+    }
+  }
+    /*
+    if(directory.remove(fileName))
+       qDebug() << "Removed" <<fileName;
+    else
+      qDebug() << "Could not delete: " << fileName;
+
+    */
+
+  //recursively copy a whole directory? 
 }
 
 bool vtkSlicerSessionManagerLogic::createUser(QString databaseName, QString username, QString password)

@@ -57,6 +57,7 @@ public:
 
   //getter function
   QStringList getFilenames();
+  QString getCurrentTraineeFilePath();
 
   //logic functions
   bool createUser(QString databaseName, QString username, QString password);
@@ -67,7 +68,7 @@ public:
   //other functions
   void setSessionNode(QString traineeID, QString studyname, int assignmentid);
   
-  QString saveSession(QString traineeID, QString studyname, QString sessionstatus, QString comments);
+  QString saveSession(QString traineeID, QString studyname, QString sessionstatus, QString comments, QString externalpath);
   void saveSessionConfirmed(QString path);
 
   QStringList getFilePaths(QString studyname, QString trainee);
@@ -79,7 +80,7 @@ public:
 private:
 	//void openDatabase(QString databasename);
     QStringList filenames; //list of study filenames
-    
+    QString currentTraineeFilePath;
 };
 
 #endif
