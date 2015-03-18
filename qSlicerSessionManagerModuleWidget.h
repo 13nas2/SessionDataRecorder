@@ -55,7 +55,7 @@ protected slots:
   void onBrowseButtonClicked();
   void onOKLoadButtonClicked();
   void onFindFilesButtonClicked();
-  void onLoadScenesButtonClicked();
+  //void onLoadScenesButtonClicked();
 
   void onSourceBrowseButtonClicked();
 

@@ -25,6 +25,7 @@ limitations under the License.
 #include <QtGui>
 
 #include <QtDebug>
+#include <QDesktopServices>
 
 // MRMLWidgets includes
 #include <qMRMLUtils.h>
@@ -131,7 +132,7 @@ void qSlicerSessionManagerModuleWidget::setup()
 
   connect(d->pushButtonFindFiles, SIGNAL(clicked()), this, SLOT (onFindFilesButtonClicked()) );
   
-  connect(d->pushButtonLoadScenes, SIGNAL(clicked()), this, SLOT (onLoadScenesButtonClicked()));
+  //connect(d->pushButtonLoadScenes, SIGNAL(clicked()), this, SLOT (onLoadScenesButtonClicked()));
 
   connect(d->pushButtonBrowseSourceDir, SIGNAL(clicked()), this, SLOT (onSourceBrowseButtonClicked()));
 
@@ -289,17 +290,20 @@ void qSlicerSessionManagerModuleWidget
   QString studyname = d->ComboBoxStudyNames_2->currentText();
   QString trainee_info = d->ComboBoxTrainees_2->currentText();
 
-  d->listWidgetScenes->clear();
+//  d->listWidgetScenes->clear();
   QStringList list = d->SessionManagerLogic->getFilePaths(studyname, trainee_info);
-  //check if the item has already been added to the list
-  //
-  d->listWidgetScenes->insertItems(0, list);
   
+  //d->listWidgetScenes->insertItems(0, list);
+  
+  //QFileDialog::getOpenFileName(this, tr("Drag files into Slicer"), d->SessionManagerLogic->getCurrentTraineeFilePath());
+  QDesktopServices::openUrl(QUrl("file:///" + d->SessionManagerLogic->getCurrentTraineeFilePath()));
+
   updateWidget();
 }
 
+/*
 void qSlicerSessionManagerModuleWidget
-::onLoadScenesButtonClicked() /* loads the scenes associated with the selected user and study*/
+::onLoadScenesButtonClicked() // loads the scenes associated with the selected user and study
 {
   Q_D( qSlicerSessionManagerModuleWidget);
 
@@ -317,6 +321,7 @@ void qSlicerSessionManagerModuleWidget
   if(!success)
     QMessageBox::information(0, "Cannot open the given files", "Error opening files");
 }
+*/
 
 /*TO DO: remove this code or update so it does not use local db*/
 void qSlicerSessionManagerModuleWidget

@@ -26,6 +26,7 @@
 #include "qSlicerApplication.h"
 
 #include "qSlicerDataDialog.h"
+#include <QFileDialog>
 
 //----------------------------------------------------------------------------
 vtkStandardNewMacro(vtkSlicerSessionManagerLogic);
@@ -101,8 +102,6 @@ QString vtkSlicerSessionManagerLogic
       this->checkForExternalFiles(externalpath);
     
     path = path + QDateTime::currentDateTime().date().toString("'\\'yyyy-MM-dd-SlicerSession'") + sessnum + ".mrb";
-
-
   }
   return path;
 }
@@ -118,7 +117,6 @@ void vtkSlicerSessionManagerLogic::saveSessionConfirmed(QString path)
   coreIOManager->saveNodes("SceneFile",properties_map); 
 
 }
-
 QStringList vtkSlicerSessionManagerLogic::getFilePaths(QString studyname, QString trainee)
 {
   QStringList list;
@@ -127,6 +125,7 @@ QStringList vtkSlicerSessionManagerLogic::getFilePaths(QString studyname, QStrin
   QString traineeid = trainee.split(',').last().split('-').last().trimmed();
   QString path = home + "\\Study-" + studyname + "\\" + traineeid;  
 
+  currentTraineeFilePath = path;
   //qSlicerIO::IOProperties properties_map;
   //properties_map["fileName"] = path;
   //qSlicerApplication::application()->ioManager()->openAddDataDialog(); //or pass in QString filename?
@@ -148,6 +147,7 @@ QStringList vtkSlicerSessionManagerLogic::getFilePaths(QString studyname, QStrin
      //list << filelist.at(i).fileName(); 
      list << filelist.at(i).absoluteFilePath();
    }
+
   return list;
 }
 
@@ -167,7 +167,6 @@ bool vtkSlicerSessionManagerLogic::loadFile(QString filename)
     return true;
   else
     return false;*/
-
  }
 
 //logic
@@ -273,7 +272,6 @@ void vtkSlicerSessionManagerLogic::checkForExternalFiles(QString externalpath)
   QString f;
   foreach (f, fileList)
   {
-    
     if(currentDir.exists(f))
     {
       /*remove the file (overwrite?) or just dont copy??*/
@@ -288,9 +286,7 @@ void vtkSlicerSessionManagerLogic::checkForExternalFiles(QString externalpath)
        qDebug() << "Removed" <<fileName;
     else
       qDebug() << "Could not delete: " << fileName;
-
     */
-
   //recursively copy a whole directory? 
 }
 
